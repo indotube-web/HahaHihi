@@ -236,7 +236,6 @@ header {
         <img id="userAvatar" src="https://www.w3schools.com/howto/img_avatar.png" alt="Profil">
       </div>
     </div>
-
   </div>
 </header>
 
@@ -370,12 +369,14 @@ window.togglePlay = async (id, link, thumbUrl) => {
     }
 
     box.innerHTML = `<iframe src="${playLink}" allow="autoplay; fullscreen" style="width:100%; height:100%; border:none; pointer-events:auto;" allowfullscreen></iframe>`;
+    
     await updateDoc(doc(db, "embeds", id), { penontonAktif: increment(1) });
-
   } else {
     delete window.activePlayingSessions[id];
     cardElement.classList.remove('is-playing');
+    
     box.innerHTML = `<img src="${thumbUrl}" alt="Thumb">`;
+    
     await updateDoc(doc(db, "embeds", id), { penontonAktif: increment(-1) });
   }
 };
