@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Menonton - HahaHihi</title>
+    <style>
+        /* --- 1 & 2. Fullscreen, Portrait/Landscape Otomatis --- */
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #000000;
+            overflow: hidden; /* Hilangkan scroll */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .player-wrapper {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            background-color: #000;
+        }
+
+        /* Iframe untuk memuat link embed */
+        #embedPlayer {
+            width: 100%;
+            height: 100%;
+            border: none;
+            object-fit: contain; /* Memastikan video tidak terpotong */
+        }
+
+        /* --- Lapisan Kaca Transparan untuk Menangkap Sentuhan Jari --- */
+        #touchOverlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 10;
+            cursor: pointer;
+        }
+
+        /* Indikator Animasi Play/Pause di Tengah Layar */
+        .status-icon {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 80px;
+            z-index: 20;
+            pointer-events: none;
+            transition: transform 0.2s ease-out, opacity 0.2s ease-out;
+            opacity: 0;
+        }
+        .status-icon.muncul {
+            transform: translate(-50%, -50%) scale(1);
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="player-wrapper">
+        <iframe id="embedPlayer" src="" allow="autoplay; fullscreen; encrypted-media" allowfullscreen></iframe>
+        
+        <div id="touchOverlay"></div>
+        
+        <div id="statusIcon" class="status-icon">▶</div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, doc, updateDoc, increment } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getDatabase, ref, onValue, push, onDisconnect } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+
+        // Konfigurasi Web App Firebase milikmu
+        const firebaseConfig = {
+          apiKey: "AIzaSyDrEQ7GcPPo8CbqF0_dRwDlXSXbz1FsmPs",
+          authDomain: "hahahihi-5084e.firebaseapp.com",
+          projectId: "hahahihi-5084e",
+          storageBucket: "hahahihi-5084e.firebasestorage.app",
+          messagingSenderId: "691544964510",
+          appId: "1:691544964510:web:561a1aed05c8a8f5ff6a8f"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const rtdb = getDatabase(app);
+
+        // Ambil data link dari URL (beranda.html melempar parameter link dan id)
+        const urlParams = new URLSearchParams(window.location.search);
+        let contentId = urlParams.get('id');
+        let mediaLink = urlParams.get('link');
+
+        if(mediaLink) {
+            // --- 5. Logika Autoplay Otomatis ---
+            // Modifikasi link YouTube agar autoplay langsung jalan dan bisa dikontrol via JS
+            if(mediaLink.includes('youtube.com/embed')) {
+                const separator = mediaLink.includes('?') ? '&' : '?';
+                mediaLink += `${separator}autoplay=1&enablejsapi=1`;
+            }
+            document.getElementById('embedPlayer').src = mediaLink;
+        }
+
+        // --- SISTEM PENONTON ASLI (PRESENCE SYSTEM) ---
+        if (contentId) {
+            const connectedRef = ref(rtdb, ".info/connected");
+            const viewersRef = ref(rtdb, `contents/${contentId}/activeViewers`);
+
+            onValue(connectedRef, (snap) => {
+                if (snap.val() === true) {
+                    // Tambah user ke daftar kehadiran
+                    const myPresenceRef = push(viewersRef);
+                    
+                    // Tambah penonton di Firestore (+1)
+                    updateDoc(doc(db, "embeds", contentId), {
+                        penontonAktif: increment(1)
+                    }).catch(err => console.log("Gagal nambah penonton:", err));
+
+                    // Atur aksi jika user keluar/putus koneksi (-1)
+                    onDisconnect(myPresenceRef).remove();
+                    onDisconnect(doc(db, "embeds", contentId)).update({
+                        penontonAktif: increment(-1)
+                    });
+                }
+            });
+        }
+    </script>
+
+    <script>
+        const overlay = document.getElementById('touchOverlay');
+        const iframe = document.getElementById('embedPlayer');
+        const statusIcon = document.getElementById('statusIcon');
+        
+        let isPlaying = true; // Karena Autoplay aktif, defaultnya adalah bermain
+        let tapCount = 0;
+        let tapTimer = null;
+
+        // Fungsi Tampilkan Ikon Tengah Layar Sejenak
+        function tampilkanIkon(simbol) {
+            statusIcon.innerText = simbol;
+            statusIcon.classList.add('muncul');
+            setTimeout(() => {
+                statusIcon.classList.remove('muncul');
+            }, 600);
+        }
+
+        // --- 3 & 4. Deteksi 1x Tap dan 2x Tap ---
+        overlay.addEventListener('click', (e) => {
+            tapCount++;
+
+            if (tapCount === 1) {
+                // Tunggu 300ms, jika tidak ada ketukan kedua, berarti ini Single Tap
+                tapTimer = setTimeout(() => {
+                    // --- Aksi 1x Sentuh: PLAY / PAUSE ---
+                    if(isPlaying) {
+                        // Perintah Pause khusus untuk iframe YouTube
+                        iframe.contentWindow.postMessage('{"event":"command","func":"pauseVideo","args":""}', '*');
+                        tampilkanIkon("⏸");
+                        isPlaying = false;
+                    } else {
+                        // Perintah Play khusus untuk iframe YouTube
+                        iframe.contentWindow.postMessage('{"event":"command","func":"playVideo","args":""}', '*');
+                        tampilkanIkon("▶");
+                        isPlaying = true;
+                    }
+                    tapCount = 0; // Reset
+                }, 300);
+            } else if (tapCount === 2) {
+                // --- Aksi 2x Sentuh: KEMBALI KE BERANDA ---
+                clearTimeout(tapTimer); // Batalkan perintah play/pause
+                
+                // Efek visual sebelum pindah
+                tampilkanIkon("🏠"); 
+                
+                setTimeout(() => {
+                    window.location.href = 'beranda.html';
+                }, 300);
+                
+                tapCount = 0; // Reset
+            }
+        });
+    </script>
+</body>
+</html>
