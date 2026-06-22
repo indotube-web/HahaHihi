@@ -6,46 +6,39 @@
     <title>Beranda - HahaHihi</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { background-color: #000000; font-family: sans-serif; color: #ffffff; min-height: 100vh; overflow-x: hidden; }
+        body { background-color: #000000; font-family: sans-serif; color: #ffffff; min-height: 100vh; }
         header { display: flex; justify-content: space-between; align-items: center; padding: 20px; border-bottom: 1px solid #222; }
-        .logo-box { padding: 10px 20px; border: 3px solid #fff; border-radius: 8px; font-weight: 900; animation: bingkaiWarna 11s infinite linear; }
-        .header-right { display: flex; align-items: center; gap: 15px; }
+        .logo-box { padding: 10px 20px; border: 3px solid #fff; border-radius: 8px; font-weight: 900; }
         .category-wrapper { width: 100%; overflow-x: auto; padding: 20px; white-space: nowrap; scrollbar-width: none; }
-        .category-btn { padding: 14px 32px; margin-right: 15px; border-radius: 30px; font-weight: 900; cursor: pointer; border: none; animation: kategoriWarna 110s infinite steps(1); }
+        .category-btn { padding: 14px 32px; margin-right: 15px; border-radius: 30px; font-weight: 900; cursor: pointer; border: none; background: #333; color: #fff; }
         .content-display { padding: 10px 20px; max-width: 800px; margin: 0 auto; display: flex; flex-direction: column; gap: 15px; }
         
-        .embed-card { display: flex; align-items: center; padding: 12px; background-color: #111; border: 3px solid #fff; border-radius: 12px; cursor: pointer; animation: bingkaiWarna 11s infinite linear; }
-        .embed-card.is-playing { border-color: #00ff66 !important; animation: none; box-shadow: 0 0 15px rgba(0, 255, 102, 0.5); }
-        .embed-thumb-box { width: 120px; height: 80px; border-radius: 8px; overflow: hidden; margin-right: 15px; flex-shrink: 0; background-color: #222; display: flex; align-items: center; justify-content: center; }
+        .embed-card { display: flex; align-items: center; padding: 12px; background-color: #111; border: 3px solid #fff; border-radius: 12px; cursor: pointer; transition: 0.3s; }
+        .embed-card.is-playing { border-color: #00ff66 !important; box-shadow: 0 0 15px rgba(0, 255, 102, 0.3); }
+        .embed-thumb-box { width: 120px; height: 80px; border-radius: 8px; overflow: hidden; margin-right: 15px; flex-shrink: 0; background: #000; display: flex; align-items: center; justify-content: center; }
         .embed-thumb-box img { width: 100%; height: 100%; object-fit: cover; }
-        .embed-info { flex-grow: 1; }
         .embed-name { font-size: 18px; font-weight: 800; }
         .embed-viewers { color: #00ff66; font-size: 14px; font-weight: 600; }
-
-        @keyframes bingkaiWarna { 0%, 100% { border-color: #ff0000; } 50% { border-color: #00ffff; } }
-        @keyframes kategoriWarna { 0%, 100% { background: #ff0000; } 50% { background: #0000ff; } }
     </style>
 </head>
 <body>
 
     <header>
         <div class="logo-box">HahaHihi</div>
-        <div class="header-right">
-            <div id="userAvatar" style="width:40px; height:40px; border-radius:50%; background:#333;"></div>
-        </div>
+        <div id="userAvatar" style="width:40px; height:40px; border-radius:50%; background:#333;"></div>
     </header>
 
     <div class="category-wrapper">
-        <button class="category-btn" onclick="selectCategory('Radio')">Radio</button>
-        <button class="category-btn" onclick="selectCategory('TV')">TV</button>
-        <button class="category-btn" onclick="selectCategory('Video')">Video</button>
+        <button class="category-btn" onclick="render('Radio')">Radio</button>
+        <button class="category-btn" onclick="render('TV')">TV</button>
+        <button class="category-btn" onclick="render('Video')">Video</button>
     </div>
 
-    <div class="content-display" id="contentDisplay">Memuat...</div>
+    <div class="content-display" id="contentDisplay">Memuat data...</div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, collection, onSnapshot, query, doc, updateDoc, increment } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getFirestore, collection, onSnapshot, doc, updateDoc, increment } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         const firebaseConfig = {
           apiKey: "AIzaSyDrEQ7GcPPo8CbqF0_dRwDlXSXbz1FsmPs",
@@ -59,24 +52,26 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        let allEmbedData = [];
-        window.activePlayingSessions = {};
+        let allData = [];
+        window.activeSessions = {};
 
-        onSnapshot(query(collection(db, "embeds")), (snap) => {
-            allEmbedData = snap.docs.map(d => ({id: d.id, ...d.data()}));
+        onSnapshot(collection(db, "embeds"), (snap) => {
+            allData = snap.docs.map(d => ({id: d.id, ...d.data()}));
             render('Radio');
         });
 
-        function render(kategori) {
+        window.render = (cat) => {
             const display = document.getElementById('contentDisplay');
             display.innerHTML = "";
-            allEmbedData.filter(i => i.kategori === kategori).forEach(item => {
+            allData.filter(i => i.kategori === cat).forEach(item => {
                 const card = document.createElement('div');
-                card.className = 'embed-card';
+                card.className = `embed-card ${window.activeSessions[item.id] ? 'is-playing' : ''}`;
                 card.id = `card-${item.id}`;
                 card.onclick = () => togglePlay(item);
                 card.innerHTML = `
-                    <div class="embed-thumb-box" id="box-${item.id}"><img src="${item.thumbnail}"></div>
+                    <div class="embed-thumb-box" id="box-${item.id}">
+                        ${window.activeSessions[item.id] ? (item.linkFinal.includes('rastream') ? '<span>Mendengarkan...</span>' : `<iframe src="${item.linkFinal}" style="width:100%;height:100%;border:none;"></iframe>`) : `<img src="${item.thumbnail}">`}
+                    </div>
                     <div class="embed-info">
                         <div class="embed-name">${item.nama}</div>
                         <div class="embed-viewers"><span id="v-${item.id}">${item.penontonAktif || 0}</span> menyaksikan</div>
@@ -84,37 +79,46 @@
                 `;
                 display.appendChild(card);
             });
-        }
-
-        window.selectCategory = render;
+        };
 
         window.togglePlay = async (item) => {
             const box = document.getElementById(`box-${item.id}`);
             const card = document.getElementById(`card-${item.id}`);
-            const isPlaying = window.activePlayingSessions[item.id];
 
-            if (!isPlaying) {
-                window.activePlayingSessions[item.id] = true;
+            if (!window.activeSessions[item.id]) {
+                // START
+                window.activeSessions[item.id] = true;
                 card.classList.add('is-playing');
                 
-                // Cek apakah link audio stream atau video youtube
-                if (item.linkFinal.includes('rastream') || item.linkFinal.endsWith('.mp3')) {
-                    box.innerHTML = `<audio src="${item.linkFinal}" autoplay controls style="width:100%"></audio>`;
+                if (item.linkFinal.includes('rastream')) {
+                    const audio = new Audio(item.linkFinal);
+                    audio.play();
+                    window.activeSessions[`audio-${item.id}`] = audio;
+                    box.innerHTML = `<span>Sedang Berbunyi...</span>`;
                 } else {
-                    box.innerHTML = `<iframe src="${item.linkFinal}?autoplay=1" style="width:100%; height:100%; border:none;"></iframe>`;
+                    box.innerHTML = `<iframe src="${item.linkFinal}" style="width:100%;height:100%;border:none;"></iframe>`;
                 }
                 await updateDoc(doc(db, "embeds", item.id), { penontonAktif: increment(1) });
             } else {
-                delete window.activePlayingSessions[item.id];
+                // STOP
+                delete window.activeSessions[item.id];
                 card.classList.remove('is-playing');
+                
+                if (window.activeSessions[`audio-${item.id}`]) {
+                    window.activeSessions[`audio-${item.id}`].pause();
+                    delete window.activeSessions[`audio-${item.id}`];
+                }
+                
                 box.innerHTML = `<img src="${item.thumbnail}">`;
                 await updateDoc(doc(db, "embeds", item.id), { penontonAktif: increment(-1) });
             }
         };
 
         window.addEventListener('beforeunload', () => {
-            Object.keys(window.activePlayingSessions).forEach(id => {
-                updateDoc(doc(db, "embeds", id), { penontonAktif: increment(-1) });
+            Object.keys(window.activeSessions).forEach(id => {
+                if (!id.startsWith('audio-')) {
+                    updateDoc(doc(db, "embeds", id), { penontonAktif: increment(-1) });
+                }
             });
         });
     </script>
