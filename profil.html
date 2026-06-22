@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Profil Akun - HahaHihi</title>
+<style>
+  /* --- Reset & Background Hitam --- */
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+  body {
+    background-color: #000000;
+    color: #ffffff;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+  }
+
+  /* --- Container Profil --- */
+  .profile-box {
+    background-color: #111111;
+    border: 2px solid #333;
+    border-radius: 16px;
+    padding: 40px 30px;
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  }
+
+  /* --- Foto Profil --- */
+  .profile-pic {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 4px solid #fff;
+    margin-bottom: 20px;
+    background-color: #222;
+  }
+
+  /* --- Info Teks --- */
+  .email-text {
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    word-break: break-all;
+  }
+  .date-text {
+    font-size: 14px;
+    color: #aaaaaa;
+    margin-bottom: 40px;
+  }
+
+  /* --- Layout Tombol Bawah --- */
+  .button-group {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    gap: 15px;
+  }
+
+  /* --- Tombol Back & Logout --- */
+  .btn {
+    flex: 1;
+    padding: 12px 0;
+    font-size: 16px;
+    font-weight: bold;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+    transition: transform 0.2s, opacity 0.2s;
+  }
+  .btn:active {
+    transform: scale(0.95);
+  }
+  .btn-back {
+    background-color: #555555;
+    color: #ffffff;
+  }
+  .btn-back:hover { background-color: #666666; }
+  
+  .btn-logout {
+    background-color: #ff3333;
+    color: #ffffff;
+  }
+  .btn-logout:hover { background-color: #ff4d4d; }
+
+  /* Loading State */
+  #loadingState {
+    color: #888;
+    font-style: italic;
+    margin-bottom: 20px;
+  }
+</style>
+</head>
+<body>
+
+<div class="profile-box">
+  <div id="loadingState">Memuat data profil...</div>
+  
+  <div id="profileContent" style="display: none;">
+    <img id="userPhoto" class="profile-pic" src="" alt="Foto Profil">
+    <div id="userEmail" class="email-text">email@domain.com</div>
+    <div id="userDate" class="date-text">dibuat -</div>
+  </div>
+
+  <div class="button-group">
+    <a href="beranda.html" class="btn btn-back">Back</a>
+    <button id="btnLogout" class="btn btn-logout">Log Out</button>
+  </div>
+</div>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+  import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyDrEQ7GcPPo8CbqF0_dRwDlXSXbz1FsmPs",
+    authDomain: "hahahihi-5084e.firebaseapp.com",
+    projectId: "hahahihi-5084e",
+    storageBucket: "hahahihi-5084e.firebasestorage.app",
+    messagingSenderId: "691544964510",
+    appId: "1:691544964510:web:561a1aed05c8a8f5ff6a8f"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+
+  // Elemen DOM
+  const loadingState = document.getElementById('loadingState');
+  const profileContent = document.getElementById('profileContent');
+  const userPhoto = document.getElementById('userPhoto');
+  const userEmail = document.getElementById('userEmail');
+  const userDate = document.getElementById('userDate');
+  const btnLogout = document.getElementById('btnLogout');
+
+  // --- 1. Ambil Data User Saat Load ---
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      // Sembunyikan loading, tampilkan konten
+      loadingState.style.display = 'none';
+      profileContent.style.display = 'block';
+
+      // Set Foto Profil & Email
+      userPhoto.src = user.photoURL || 'https://www.w3schools.com/howto/img_avatar.png';
+      userEmail.innerText = user.email || 'Email tidak tersedia';
+
+      // Set Tanggal Pembuatan Akun (Format Bahasa Indonesia)
+      if (user.metadata && user.metadata.creationTime) {
+        const dateObj = new Date(user.metadata.creationTime);
+        const options = { day: 'numeric', month: 'long', year: 'numeric' };
+        const formattedDate = dateObj.toLocaleDateString('id-ID', options);
+        userDate.innerText = `dibuat ${formattedDate}`;
+      } else {
+        userDate.innerText = "Tanggal pembuatan tidak diketahui";
+      }
+    } else {
+      // Jika tidak ada user (belum login/sudah logout), tendang ke index.html
+      window.location.replace('index.html');
+    }
+  });
+
+  // --- 2. Fungsi Log Out ---
+  btnLogout.addEventListener('click', () => {
+    // Ubah teks tombol biar user tahu sedang proses
+    btnLogout.innerText = "Keluar...";
+    btnLogout.disabled = true;
+
+    signOut(auth).then(() => {
+      // Sign-out berhasil, arahkan ke index.html
+      window.location.replace('index.html');
+    }).catch((error) => {
+      console.error("Gagal Log Out:", error);
+      alert("Terjadi kesalahan saat log out.");
+      btnLogout.innerText = "Log Out";
+      btnLogout.disabled = false;
+    });
+  });
+</script>
+</body>
+</html>
