@@ -28,7 +28,7 @@
             border-bottom: 1px solid #222;
         }
 
-        /* --- 2. Logo HahaHihi dengan Bingkai & Warna-warni Huruf --- */
+        /* --- 2. Logo HahaHihi --- */
         .logo-box {
             padding: 10px 20px;
             border: 3px solid #fff;
@@ -39,12 +39,7 @@
             letter-spacing: 1px;
             animation: bingkaiWarna 11s infinite linear;
         }
-        
-        .logo-box span {
-            display: inline-block;
-            animation: hurufWarna 3s infinite steps(1);
-        }
-
+        .logo-box span { display: inline-block; animation: hurufWarna 3s infinite steps(1); }
         .logo-box span:nth-child(1) { animation-delay: 0.1s; }
         .logo-box span:nth-child(2) { animation-delay: 0.4s; }
         .logo-box span:nth-child(3) { animation-delay: 0.7s; }
@@ -54,12 +49,7 @@
         .logo-box span:nth-child(7) { animation-delay: 1.9s; }
         .logo-box span:nth-child(8) { animation-delay: 2.2s; }
 
-        /* --- Area Kanan Atas --- */
-        .header-right {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
+        .header-right { display: flex; align-items: center; gap: 15px; }
 
         /* --- 5. Icon Kaca Pembesar --- */
         .search-icon {
@@ -69,7 +59,7 @@
             animation: iconWarna 55s infinite steps(1);
         }
 
-        /* --- 4 & 7. Tombol +Tambahkan Atas --- */
+        /* --- Tombol +Tambahkan --- */
         .btn-tambah {
             background-color: transparent;
             font-size: 14px;
@@ -84,7 +74,7 @@
         }
         .btn-tambah:active { transform: scale(0.95); }
 
-        /* --- 3. Lingkaran Foto Profil --- */
+        /* --- Profil --- */
         .profile-container {
             position: relative;
             width: 46px;
@@ -114,7 +104,7 @@
             animation: putarMelingkarBalik 3s infinite linear;
         }
 
-        /* --- 6. Bar Kategori --- */
+        /* --- Kategori --- */
         .category-wrapper {
             width: 100%;
             overflow-x: auto;
@@ -146,7 +136,6 @@
         .category-wrapper .category-btn:nth-child(6) { animation-delay: 10s; }
         .category-wrapper .category-btn:nth-child(7) { animation-delay: 12s; }
 
-        /* --- Area Konten Dinamis di bawah Kategori --- */
         .content-display {
             padding: 10px 20px;
             margin: 0 auto;
@@ -156,7 +145,7 @@
             gap: 15px;
         }
 
-        /* --- 2 & 3. Item List Embed Dengan Bingkai Warna-warni Mandiri --- */
+        /* --- Item List (DIUBAH MENJADI DIV, BUKAN LINK) --- */
         .embed-card {
             display: flex;
             align-items: center;
@@ -164,20 +153,23 @@
             background-color: #111;
             border: 3px solid #fff;
             border-radius: 12px;
-            text-decoration: none;
             color: #fff;
             cursor: pointer;
-            transition: transform 0.2s;
-            /* Setiap item diletakkan animasi bingkai >10 warna per 1 detik */
+            transition: transform 0.2s, box-shadow 0.2s;
             animation: bingkaiWarna 11s infinite linear;
+            user-select: none;
         }
-        .embed-card:hover {
-            transform: translateY(-2px);
+        .embed-card:hover { transform: translateY(-2px); }
+        
+        /* Indikator visual saat konten sedang berputar (PLAY) */
+        .embed-card.is-playing {
+            border-color: #00ff66 !important;
+            animation: none;
+            box-shadow: 0 0 15px rgba(0, 255, 102, 0.5);
         }
 
-        /* Kotak Gambar Sebelah Kiri */
         .embed-thumb-box {
-            width: 80px;
+            width: 120px; /* Diperlebar sedikit agar video lebih enak dilihat saat play */
             height: 80px;
             border-radius: 8px;
             overflow: hidden;
@@ -191,16 +183,13 @@
             object-fit: cover;
         }
 
-        /* Susunan 3 Baris Info Kanan */
         .embed-info {
             display: flex;
             flex-direction: column;
             gap: 4px;
+            flex-grow: 1;
         }
-        .embed-name {
-            font-size: 18px;
-            font-weight: 800;
-        }
+        .embed-name { font-size: 18px; font-weight: 800; }
         .embed-viewers {
             font-size: 14px;
             color: #00ff66;
@@ -209,81 +198,25 @@
             align-items: center;
             gap: 5px;
         }
-        .embed-viewers::before {
-            content: '●';
-            color: #00ff66;
-        }
-        .embed-tag {
-            font-size: 12px;
-            color: #aaa;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
+        .embed-viewers::before { content: '●'; color: #00ff66; }
+        .embed-tag { font-size: 12px; color: #aaa; text-transform: uppercase; letter-spacing: 0.5px; }
 
-        /* --- 6. Desain Tombol Tambahkan Kategori Kosong --- */
-        .empty-state {
-            text-align: center;
-            padding: 60px 20px;
-        }
+        .empty-state { text-align: center; padding: 60px 20px; }
         .btn-empty-add {
-            display: inline-block;
-            color: #ffffff;
-            font-size: 28px;
-            font-weight: 900;
-            text-decoration: none;
-            border: 4px dashed #ffffff;
-            padding: 20px 50px;
-            border-radius: 16px;
-            transition: background-color 0.3s, transform 0.2s;
+            display: inline-block; color: #ffffff; font-size: 28px; font-weight: 900;
+            text-decoration: none; border: 4px dashed #ffffff; padding: 20px 50px;
+            border-radius: 16px; transition: background-color 0.3s, transform 0.2s;
         }
-        .btn-empty-add:hover {
-            background-color: #222;
-            transform: scale(1.05);
-        }
+        .btn-empty-add:hover { background-color: #222; transform: scale(1.05); }
 
-        /* ==================== ANIMASI KEYFRAMES ==================== */
-        @keyframes bingkaiWarna {
-            0% { border-color: #ff0000; } 9% { border-color: #ff7f00; } 18% { border-color: #ffff00; }
-            27% { border-color: #00ff00; } 36% { border-color: #00ffff; } 45% { border-color: #0000ff; }
-            54% { border-color: #8b00ff; } 63% { border-color: #ff00ff; } 72% { border-color: #ff1493; }
-            81% { border-color: #1e90ff; } 90% { border-color: #32cd32; } 100% { border-color: #ff0000; }
-        }
-        @keyframes hurufWarna {
-            0% { color: #ff00ff; } 9% { color: #00ffff; } 18% { color: #ffff00; }
-            27% { color: #ff1493; } 36% { color: #00ff00; } 45% { color: #1e90ff; }
-            54% { color: #ff4500; } 63% { color: #0000ff; } 72% { color: #8b00ff; }
-            81% { color: #ff0000; } 90% { color: #32cd32; } 100% { color: #ff00ff; }
-        }
+        /* KEYFRAMES TETAP SAMA */
+        @keyframes bingkaiWarna { 0% { border-color: #ff0000; } 9% { border-color: #ff7f00; } 18% { border-color: #ffff00; } 27% { border-color: #00ff00; } 36% { border-color: #00ffff; } 45% { border-color: #0000ff; } 54% { border-color: #8b00ff; } 63% { border-color: #ff00ff; } 72% { border-color: #ff1493; } 81% { border-color: #1e90ff; } 90% { border-color: #32cd32; } 100% { border-color: #ff0000; } }
+        @keyframes hurufWarna { 0% { color: #ff00ff; } 9% { color: #00ffff; } 18% { color: #ffff00; } 27% { color: #ff1493; } 36% { color: #00ff00; } 45% { color: #1e90ff; } 54% { color: #ff4500; } 63% { color: #0000ff; } 72% { color: #8b00ff; } 81% { color: #ff0000; } 90% { color: #32cd32; } 100% { color: #ff00ff; } }
         @keyframes putarMelingkar { 100% { transform: rotate(360deg); } }
         @keyframes putarMelingkarBalik { 100% { transform: rotate(-360deg); } }
-        @keyframes tombolTambahWarna {
-            0% { background-color: #ff0000; color: #fff; } 9% { background-color: #ff7f00; color: #000; }
-            18% { background-color: #ffff00; color: #000; } 27% { background-color: #00ff00; color: #000; }
-            36% { background-color: #00ffff; color: #000; } 45% { background-color: #0000ff; color: #fff; }
-            54% { background-color: #8b00ff; color: #fff; } 63% { background-color: #ff00ff; color: #fff; }
-            72% { background-color: #ff1493; color: #fff; } 81% { background-color: #1e90ff; color: #fff; }
-            90% { background-color: #32cd32; color: #000; } 100% { background-color: #ff0000; color: #fff; }
-        }
-        @keyframes iconWarna {
-            0% { fill: #1e90ff; } 9% { fill: #ff0055; } 18% { fill: #00ffaa; }
-            27% { fill: #ffcc00; } 36% { fill: #ff00ff; } 45% { fill: #00ffff; }
-            54% { fill: #ff5722; } 63% { fill: #4caf50; } 72% { fill: #9c27b0; }
-            81% { fill: #e91e63; } 90% { fill: #ffff00; } 100% { fill: #1e90ff; }
-        }
-        @keyframes kategoriWarna {
-            0% { background-color: #ff0000; color: #ffffff; }
-            9% { background-color: #ffffff; color: #000000; }
-            18% { background-color: #00ff00; color: #000000; }
-            27% { background-color: #0000ff; color: #ffffff; }
-            36% { background-color: #ffff00; color: #000000; }
-            45% { background-color: #ff00ff; color: #ffffff; }
-            54% { background-color: #00ffff; color: #000000; }
-            63% { background-color: #ff8c00; color: #ffffff; }
-            72% { background-color: #8b00ff; color: #ffffff; }
-            81% { background-color: #ff1493; color: #ffffff; }
-            90% { background-color: #1e90ff; color: #ffffff; }
-            100% { background-color: #ff0000; color: #ffffff; }
-        }
+        @keyframes tombolTambahWarna { 0% { background-color: #ff0000; color: #fff; } 9% { background-color: #ff7f00; color: #000; } 18% { background-color: #ffff00; color: #000; } 27% { background-color: #00ff00; color: #000; } 36% { background-color: #00ffff; color: #000; } 45% { background-color: #0000ff; color: #fff; } 54% { background-color: #8b00ff; color: #fff; } 63% { background-color: #ff00ff; color: #fff; } 72% { background-color: #ff1493; color: #fff; } 81% { background-color: #1e90ff; color: #fff; } 90% { background-color: #32cd32; color: #000; } 100% { background-color: #ff0000; color: #fff; } }
+        @keyframes iconWarna { 0% { fill: #1e90ff; } 9% { fill: #ff0055; } 18% { fill: #00ffaa; } 27% { fill: #ffcc00; } 36% { fill: #ff00ff; } 45% { fill: #00ffff; } 54% { fill: #ff5722; } 63% { fill: #4caf50; } 72% { fill: #9c27b0; } 81% { fill: #e91e63; } 90% { fill: #ffff00; } 100% { fill: #1e90ff; } }
+        @keyframes kategoriWarna { 0% { background-color: #ff0000; color: #ffffff; } 9% { background-color: #ffffff; color: #000000; } 18% { background-color: #00ff00; color: #000000; } 27% { background-color: #0000ff; color: #ffffff; } 36% { background-color: #ffff00; color: #000000; } 45% { background-color: #ff00ff; color: #ffffff; } 54% { background-color: #00ffff; color: #000000; } 63% { background-color: #ff8c00; color: #ffffff; } 72% { background-color: #8b00ff; color: #ffffff; } 81% { background-color: #ff1493; color: #ffffff; } 90% { background-color: #1e90ff; color: #ffffff; } 100% { background-color: #ff0000; color: #ffffff; } }
     </style>
 </head>
 <body>
@@ -292,14 +225,11 @@
         <div class="logo-box">
             <span>H</span><span>a</span><span>h</span><span>a</span><span>H</span><span>i</span><span>h</span><span>i</span>
         </div>
-
         <div class="header-right">
             <svg class="search-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                 <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z" stroke="currentColor" stroke-width="1.5"/>
             </svg>
-
             <a href="tambah.html" class="btn-tambah" id="btnTambah">+Tambahkan</a>
-
             <div class="profile-container">
                 <div class="profile-border-inner">
                     <img id="userAvatar" src="https://www.w3schools.com/howto/img_avatar.png" alt="Profil">
@@ -325,8 +255,8 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-        // Import Firestore untuk penarikan data (realtime)
-        import { getFirestore, collection, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        // Tambahan import updateDoc & doc untuk nambah/kurang penonton
+        import { getFirestore, collection, onSnapshot, query, orderBy, doc, updateDoc, increment } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         const firebaseConfig = {
           apiKey: "AIzaSyDrEQ7GcPPo8CbqF0_dRwDlXSXbz1FsmPs",
@@ -342,38 +272,54 @@
         const db = getFirestore(app);
 
         let allEmbedData = [];
-        let currentSelectedCategory = "Radio"; // Kategori default awal buka halaman
+        let currentSelectedCategory = "Radio"; 
+        let isInitialRender = true; 
+        
+        // Objek untuk melacak status video yang sedang kamu putar di hp-mu sendiri
+        window.activePlayingSessions = {};
 
-        // Ambil data profil Google Auth
         onAuthStateChanged(auth, (user) => {
             if (user && user.photoURL) {
                 document.getElementById('userAvatar').src = user.photoURL;
             }
         });
 
-        // 1. Ambil data secara Realtime dari Firestore ('embeds')
         const q = query(collection(db, "embeds"), orderBy("createdAt", "desc"));
         onSnapshot(q, (snapshot) => {
-            allEmbedData = [];
+            const newData = [];
             snapshot.forEach((doc) => {
-                allEmbedData.push({ id: doc.id, ...doc.data() });
+                newData.push({ id: doc.id, ...doc.data() });
             });
-            // Segarkan tampilan sesuai kategori yang sedang dipilih saat ini
-            renderEmbedsByCategory(currentSelectedCategory);
+            allEmbedData = newData;
+
+            const displayZone = document.getElementById('contentDisplay');
+            const currentCards = displayZone.querySelectorAll('.embed-card');
+            const filteredData = allEmbedData.filter(item => item.kategori === currentSelectedCategory);
+
+            // LOGIKA PINTAR: Supaya video tidak tiba-tiba berhenti saat ada update penonton
+            if (currentCards.length !== filteredData.length || isInitialRender) {
+                renderEmbedsByCategory(currentSelectedCategory);
+                isInitialRender = false;
+            } else {
+                // Update angka penonton saja secara diam-diam
+                filteredData.forEach(item => {
+                    const viewerSpan = document.getElementById(`viewers-${item.id}`);
+                    if (viewerSpan) {
+                        viewerSpan.innerText = (item.penontonAktif || 0).toLocaleString('id-ID');
+                    }
+                });
+            }
         }, (error) => {
             console.error("Gagal mengambil data dari firestore: ", error);
         });
 
-        // Fungsi Filter & Render komponen
         function renderEmbedsByCategory(kategori) {
             currentSelectedCategory = kategori;
             const displayZone = document.getElementById('contentDisplay');
-            displayZone.innerHTML = ""; // Bersihkan kontainer
+            displayZone.innerHTML = ""; 
 
-            // Filter data yang sesuai dengan kategori aktif
             const filteredData = allEmbedData.filter(item => item.kategori === kategori);
 
-            // 6. Jika data kosong, tampilkan tombol jumbo "+tambahkan" putih tebal besar
             if(filteredData.length === 0) {
                 displayZone.innerHTML = `
                     <div class="empty-state">
@@ -383,27 +329,27 @@
                 return;
             }
 
-            // 2. Loop dan buat baris data jika isi database ada
             filteredData.forEach(item => {
-                // Menghasilkan angka penonton acak real-time fiktif (misal antara 50 - 5000)
-                const randomViewers = Math.floor(Math.random() * 4950) + 50;
-
-                // 3. Membuat variasi jeda acak (random animation delay) agar pergantian warna tidak serempak
                 const randomDelay = (Math.random() * -10).toFixed(1) + 's';
+                // Penonton nyata (default 0)
+                const realViewers = item.penontonAktif || 0;
+                const thumbUrl = item.thumbnail || 'https://images.unsplash.com/photo-1614850523459-c2f4c699c52e?q=80&w=150';
 
-                const card = document.createElement('a');
+                const card = document.createElement('div');
                 card.className = 'embed-card';
-                // Masukkan link tujuan beserta parameter id/link tujuan agar bisa diputar di tonton.html
-                card.href = `tonton.html?id=${item.id}&link=${encodeURIComponent(item.linkFinal)}&name=${encodeURIComponent(item.nama)}`;
-                card.style.animationDelay = randomDelay; // Terapkan delay mandiri (Poin 3)
+                card.id = `card-${item.id}`;
+                card.style.animationDelay = randomDelay;
+
+                // Fungsi Klik yang Mengontrol Play & Stop inline
+                card.onclick = () => window.togglePlay(item.id, item.linkFinal, thumbUrl);
 
                 card.innerHTML = `
-                    <div class="embed-thumb-box">
-                        <img src="${item.thumbnail || 'https://images.unsplash.com/photo-1614850523459-c2f4c699c52e?q=80&w=150'}" alt="Thumb">
+                    <div class="embed-thumb-box" id="box-${item.id}">
+                        <img src="${thumbUrl}" alt="Thumb">
                     </div>
                     <div class="embed-info">
                         <div class="embed-name">${item.nama}</div>
-                        <div class="embed-viewers">${randomViewers.toLocaleString('id-ID')} menyaksikan</div>
+                        <div class="embed-viewers"><span id="viewers-${item.id}">${realViewers.toLocaleString('id-ID')}</span> menyaksikan</div>
                         <div class="embed-tag">${item.kategori} Hub</div>
                     </div>
                 `;
@@ -411,8 +357,53 @@
             });
         }
 
-        // Ekspos fungsi ke scope window agar bisa dipicu dari atribut onClick HTML tombol kategori
-        window.selectCategory = renderEmbedsByCategory;
+        window.selectCategory = (kategori) => {
+            isInitialRender = true; // Paksa gambar ulang bingkai
+            renderEmbedsByCategory(kategori);
+        };
+
+        // --- SISTEM PLAY & STOP (INLINE) ---
+        window.togglePlay = async (id, link, thumbUrl) => {
+            const cardElement = document.getElementById(`card-${id}`);
+            const box = document.getElementById(`box-${id}`);
+            const isPlaying = window.activePlayingSessions[id]; 
+
+            if (!isPlaying) {
+                // 1. UBAH JADI PLAY
+                window.activePlayingSessions[id] = true;
+                cardElement.classList.add('is-playing');
+                
+                // Tambahkan kode autoplay jika itu link YouTube
+                let playLink = link;
+                if(playLink.includes('youtube.com/embed')) {
+                    const sep = playLink.includes('?') ? '&' : '?';
+                    playLink += `${sep}autoplay=1`;
+                }
+
+                // Ganti Thumbnail dengan Iframe Video
+                box.innerHTML = `<iframe src="${playLink}" allow="autoplay; fullscreen" style="width:100%; height:100%; border:none; pointer-events:auto;" allowfullscreen></iframe>`;
+
+                // Nambah 1 penonton di Database
+                await updateDoc(doc(db, "embeds", id), { penontonAktif: increment(1) });
+            } else {
+                // 2. UBAH JADI STOP
+                delete window.activePlayingSessions[id];
+                cardElement.classList.remove('is-playing');
+                
+                // Kembalikan ke Gambar Thumbnail
+                box.innerHTML = `<img src="${thumbUrl}" alt="Thumb">`;
+
+                // Kurang 1 penonton di Database
+                await updateDoc(doc(db, "embeds", id), { penontonAktif: increment(-1) });
+            }
+        };
+
+        // Otomatis kurangi jumlah penonton jika user tiba-tiba close tab/browser saat video masih play
+        window.addEventListener('beforeunload', () => {
+            Object.keys(window.activePlayingSessions).forEach(id => {
+                updateDoc(doc(db, "embeds", id), { penontonAktif: increment(-1) });
+            });
+        });
     </script>
 </body>
 </html>
