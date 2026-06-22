@@ -37,17 +37,17 @@
             font-size: 24px;
             font-weight: 900;
             letter-spacing: 1px;
-            /* Animasi bingkai >10 warna berganti tiap 1 detik secara kontinu */
+            /* Animasi bingkai >10 warna berganti tiap 1 detik */
             animation: bingkaiWarna 11s infinite linear;
         }
         
         .logo-box span {
             display: inline-block;
-            /* Animasi huruf per 3 detik sekali berganti warna acak */
+            /* Animasi huruf per 3 detik sekali berganti warna */
             animation: hurufWarna 3s infinite steps(1);
         }
 
-        /* Delay animasi tiap huruf agar memancarkan warna berbeda satu sama lain */
+        /* Delay animasi tiap huruf agar memancarkan warna berbeda */
         .logo-box span:nth-child(1) { animation-delay: 0.1s; }
         .logo-box span:nth-child(2) { animation-delay: 0.4s; }
         .logo-box span:nth-child(3) { animation-delay: 0.7s; }
@@ -78,7 +78,7 @@
             font-size: 14px;
             font-weight: bold;
             padding: 10px 20px;
-            border-radius: 25px; /* Sudut melengkung */
+            border-radius: 25px;
             cursor: pointer;
             text-decoration: none;
             display: inline-block;
@@ -116,36 +116,47 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
-            /* Mencegah gambar ikut berputar mengikuti bingkainya */
             animation: putarMelingkarBalik 3s infinite linear;
         }
 
-        /* --- 6. Bar Kategori (Scroll Kanan-Kiri & Ganti Warna Tiap 10 Detik + Kontras Tulisan) --- */
+        /* --- 6. Bar Kategori (Scroll Kanan-Kiri & Efek Lampu Hias Bergantian) --- */
         .category-wrapper {
             width: 100%;
             overflow-x: auto;
             white-space: nowrap;
-            padding: 15px 20px;
-            scrollbar-width: none; /* Sembunyikan scrollbar Firefox */
+            padding: 20px;
+            scrollbar-width: none; /* Sembunyikan untuk Firefox */
         }
         .category-wrapper::-webkit-scrollbar {
-            display: none; /* Sembunyikan scrollbar Chrome/Safari */
+            display: none; /* Sembunyikan untuk Chrome/Safari */
         }
         .category-btn {
             display: inline-block;
-            padding: 10px 24px;
-            margin-right: 12px;
-            border-radius: 20px;
-            font-weight: bold;
-            font-size: 14px;
+            padding: 14px 32px; 
+            margin-right: 15px;
+            border-radius: 30px;
+            font-weight: 900; /* Tebal dan Besar */
+            font-size: 18px;  
             cursor: pointer;
             border: none;
             outline: none;
-            transition: all 0.3s ease;
+            transition: transform 0.2s;
             /* Animasi 10 detik sekali ganti warna background & teks kontras */
             animation: kategoriWarna 110s infinite steps(1);
         }
-        
+        .category-btn:active {
+            transform: scale(0.95);
+        }
+
+        /* Jeda Animasi (Delay) agar warna tidak berbarengan (seperti lampu hias bergantian) */
+        .category-wrapper .category-btn:nth-child(1) { animation-delay: 0s; }
+        .category-wrapper .category-btn:nth-child(2) { animation-delay: 2s; }
+        .category-wrapper .category-btn:nth-child(3) { animation-delay: 4s; }
+        .category-wrapper .category-btn:nth-child(4) { animation-delay: 6s; }
+        .category-wrapper .category-btn:nth-child(5) { animation-delay: 8s; }
+        .category-wrapper .category-btn:nth-child(6) { animation-delay: 10s; }
+        .category-wrapper .category-btn:nth-child(7) { animation-delay: 12s; }
+
         /* Area Konten Dinamis di bawah Kategori */
         .content-display {
             padding: 30px 20px;
@@ -159,7 +170,7 @@
 
         /* ==================== ANIMASI KEYFRAMES (>10 WARNA) ==================== */
 
-        /* 2. Animasi Bingkai Logo (Per 1 Detik Berganti) */
+        /* 2. Animasi Bingkai Logo (Per 1 Detik) */
         @keyframes bingkaiWarna {
             0% { border-color: #ff0000; } 9% { border-color: #ff7f00; } 18% { border-color: #ffff00; }
             27% { border-color: #00ff00; } 36% { border-color: #00ffff; } 45% { border-color: #0000ff; }
@@ -196,7 +207,7 @@
             54% { fill: #ff5722; } 63% { fill: #4caf50; } 72% { fill: #9c27b0; }
             81% { fill: #e91e63; } 90% { fill: #ffff00; } 100% { fill: #1e90ff; }
         }
-        /* 6. Animasi Tombol Kategori Per 10 Detik + Kontras Tulisan Terbaca */
+        /* 6. Animasi Tombol Kategori Per 10 Detik (Menyesuaikan Warna & Kontras Teks) */
         @keyframes kategoriWarna {
             0% { background-color: #ff0000; color: #ffffff; }
             9% { background-color: #ffffff; color: #000000; }
@@ -222,7 +233,7 @@
 
         <div class="header-right">
             <svg class="search-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z" stroke="currentColor" stroke-width="1"/>
+                <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z" stroke="currentColor" stroke-width="1.5"/>
             </svg>
 
             <a href="tambah.html" class="btn-tambah" id="btnTambah">+Tambahkan</a>
@@ -236,24 +247,25 @@
     </header>
 
     <div class="category-wrapper">
-        <button class="category-btn" onclick="gantiKonten('Video')">🎬 Video Embed</button>
-        <button class="category-btn" onclick="gantiKonten('Musik')">🎵 Musik Spotify</button>
-        <button class="category-btn" onclick="gantiKonten('Meme')">😂 Meme Gambar</button>
-        <button class="category-btn" onclick="gantiKonten('Games')">🎮 Mini Games</button>
-        <button class="category-btn" onclick="gantiKonten('Quotes')">✍️ Kata Bijak</button>
-        <button class="category-btn" onclick="gantiKonten('Trending')">🔥 Sedang Viral</button>
-        <button class="category-btn" onclick="gantiKonten('Anime')">🌸 Jejepangan</button>
+        <button class="category-btn" onclick="gantiKonten('Radio')">Radio</button>
+        <button class="category-btn" onclick="gantiKonten('TV')">TV</button>
+        <button class="category-btn" onclick="gantiKonten('Video')">Video</button>
+        <button class="category-btn" onclick="gantiKonten('Musik')">Musik</button>
+        <button class="category-btn" onclick="gantiKonten('Games')">Games</button>
+        <button class="category-btn" onclick="gantiKonten('Meme')">Meme</button>
+        <button class="category-btn" onclick="gantiKonten('Quotes')">Quotes</button>
     </div>
 
     <div class="content-display" id="contentDisplay">
-        Silakan pilih kategori di atas untuk memuat data embed.
+        Silakan pilih kategori di atas untuk memuat grup media embed.
     </div>
 
     <script type="module">
+        // Menggunakan SDK Firebase Web standar berbasis CDN agar kompatibel langsung di file .html biasa
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
-        // Konfigurasi Firebase (Samakan dengan index/buku tamu)
+        // Konfigurasi Web App Firebase milikmu
         const firebaseConfig = {
           apiKey: "AIzaSyDrEQ7GcPPo8CbqF0_dRwDlXSXbz1FsmPs",
           authDomain: "hahahihi-5084e.firebaseapp.com",
@@ -263,10 +275,11 @@
           appId: "1:691544964510:web:561a1aed05c8a8f5ff6a8f"
         };
 
+        // Initialize Firebase
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
 
-        // 3. Mengambil & Memasang Foto Profil Email Aktif secara Realtime
+        // Ambil data foto profil user secara dinamis dari akun Google pendaftar
         onAuthStateChanged(auth, (user) => {
             if (user && user.photoURL) {
                 document.getElementById('userAvatar').src = user.photoURL;
@@ -276,12 +289,11 @@
     </script>
 
     <script>
-        // 6. Logika klik kategori untuk mengubah tampilan bawahnya
+        // Logika manajemen pengelompokan konten kumpul sesuai kategori induk
         function gantiKonten(kategori) {
             const display = document.getElementById('contentDisplay');
-            display.innerHTML = `Membuka Konten Kategori: <strong>${kategori}</strong> <br><br> <span style="font-size:14px; color:#666;">[Disini nanti komponen embed diletakkan]</span>`;
+            display.innerHTML = `Menampilkan kelompok data embed untuk: <strong>${kategori}</strong><br><br><span style="font-size:14px; color:#666;">[Tempat list komponen embed khusus kelompok ${kategori}]</span>`;
         }
     </script>
 </body>
 </html>
-
