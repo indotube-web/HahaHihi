@@ -37,17 +37,14 @@
             font-size: 24px;
             font-weight: 900;
             letter-spacing: 1px;
-            /* Animasi bingkai >10 warna berganti tiap 1 detik */
             animation: bingkaiWarna 11s infinite linear;
         }
         
         .logo-box span {
             display: inline-block;
-            /* Animasi huruf per 3 detik sekali berganti warna */
             animation: hurufWarna 3s infinite steps(1);
         }
 
-        /* Delay animasi tiap huruf agar memancarkan warna berbeda */
         .logo-box span:nth-child(1) { animation-delay: 0.1s; }
         .logo-box span:nth-child(2) { animation-delay: 0.4s; }
         .logo-box span:nth-child(3) { animation-delay: 0.7s; }
@@ -64,7 +61,7 @@
             gap: 15px;
         }
 
-        /* --- 5. Icon Kaca Pembesar Tebal (Berganti >10 Warna per 5 Detik) --- */
+        /* --- 5. Icon Kaca Pembesar --- */
         .search-icon {
             width: 28px;
             height: 28px;
@@ -72,7 +69,7 @@
             animation: iconWarna 55s infinite steps(1);
         }
 
-        /* --- 4 & 7. Tombol +Tambahkan (Sudut Melengkung, Berganti >10 Warna per 1 Detik) --- */
+        /* --- 4 & 7. Tombol +Tambahkan Atas --- */
         .btn-tambah {
             background-color: transparent;
             font-size: 14px;
@@ -85,11 +82,9 @@
             animation: tombolTambahWarna 11s infinite linear;
             transition: transform 0.2s;
         }
-        .btn-tambah:active {
-            transform: scale(0.95);
-        }
+        .btn-tambah:active { transform: scale(0.95); }
 
-        /* --- 3. Lingkaran Foto Profil Mengalir Melingkar Berputar 3 Detik --- */
+        /* --- 3. Lingkaran Foto Profil --- */
         .profile-container {
             position: relative;
             width: 46px;
@@ -119,36 +114,30 @@
             animation: putarMelingkarBalik 3s infinite linear;
         }
 
-        /* --- 6. Bar Kategori (Scroll Kanan-Kiri & Efek Lampu Hias Bergantian) --- */
+        /* --- 6. Bar Kategori --- */
         .category-wrapper {
             width: 100%;
             overflow-x: auto;
             white-space: nowrap;
             padding: 20px;
-            scrollbar-width: none; /* Sembunyikan untuk Firefox */
+            scrollbar-width: none;
         }
-        .category-wrapper::-webkit-scrollbar {
-            display: none; /* Sembunyikan untuk Chrome/Safari */
-        }
+        .category-wrapper::-webkit-scrollbar { display: none; }
         .category-btn {
             display: inline-block;
             padding: 14px 32px; 
             margin-right: 15px;
             border-radius: 30px;
-            font-weight: 900; /* Tebal dan Besar */
+            font-weight: 900;
             font-size: 18px;  
             cursor: pointer;
             border: none;
             outline: none;
             transition: transform 0.2s;
-            /* Animasi 10 detik sekali ganti warna background & teks kontras */
             animation: kategoriWarna 110s infinite steps(1);
         }
-        .category-btn:active {
-            transform: scale(0.95);
-        }
+        .category-btn:active { transform: scale(0.95); }
 
-        /* Jeda Animasi (Delay) agar warna tidak berbarengan (seperti lampu hias bergantian) */
         .category-wrapper .category-btn:nth-child(1) { animation-delay: 0s; }
         .category-wrapper .category-btn:nth-child(2) { animation-delay: 2s; }
         .category-wrapper .category-btn:nth-child(3) { animation-delay: 4s; }
@@ -157,41 +146,116 @@
         .category-wrapper .category-btn:nth-child(6) { animation-delay: 10s; }
         .category-wrapper .category-btn:nth-child(7) { animation-delay: 12s; }
 
-        /* Area Konten Dinamis di bawah Kategori */
+        /* --- Area Konten Dinamis di bawah Kategori --- */
         .content-display {
-            padding: 30px 20px;
-            text-align: center;
-            color: #888;
-            font-size: 18px;
-            border: 2px dashed #222;
-            margin: 20px;
-            border-radius: 10px;
+            padding: 10px 20px;
+            margin: 0 auto;
+            max-width: 800px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
         }
 
-        /* ==================== ANIMASI KEYFRAMES (>10 WARNA) ==================== */
+        /* --- 2 & 3. Item List Embed Dengan Bingkai Warna-warni Mandiri --- */
+        .embed-card {
+            display: flex;
+            align-items: center;
+            padding: 12px;
+            background-color: #111;
+            border: 3px solid #fff;
+            border-radius: 12px;
+            text-decoration: none;
+            color: #fff;
+            cursor: pointer;
+            transition: transform 0.2s;
+            /* Setiap item diletakkan animasi bingkai >10 warna per 1 detik */
+            animation: bingkaiWarna 11s infinite linear;
+        }
+        .embed-card:hover {
+            transform: translateY(-2px);
+        }
 
-        /* 2. Animasi Bingkai Logo (Per 1 Detik) */
+        /* Kotak Gambar Sebelah Kiri */
+        .embed-thumb-box {
+            width: 80px;
+            height: 80px;
+            border-radius: 8px;
+            overflow: hidden;
+            margin-right: 15px;
+            flex-shrink: 0;
+            background-color: #222;
+        }
+        .embed-thumb-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Susunan 3 Baris Info Kanan */
+        .embed-info {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        .embed-name {
+            font-size: 18px;
+            font-weight: 800;
+        }
+        .embed-viewers {
+            font-size: 14px;
+            color: #00ff66;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .embed-viewers::before {
+            content: '●';
+            color: #00ff66;
+        }
+        .embed-tag {
+            font-size: 12px;
+            color: #aaa;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* --- 6. Desain Tombol Tambahkan Kategori Kosong --- */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+        }
+        .btn-empty-add {
+            display: inline-block;
+            color: #ffffff;
+            font-size: 28px;
+            font-weight: 900;
+            text-decoration: none;
+            border: 4px dashed #ffffff;
+            padding: 20px 50px;
+            border-radius: 16px;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+        .btn-empty-add:hover {
+            background-color: #222;
+            transform: scale(1.05);
+        }
+
+        /* ==================== ANIMASI KEYFRAMES ==================== */
         @keyframes bingkaiWarna {
             0% { border-color: #ff0000; } 9% { border-color: #ff7f00; } 18% { border-color: #ffff00; }
             27% { border-color: #00ff00; } 36% { border-color: #00ffff; } 45% { border-color: #0000ff; }
             54% { border-color: #8b00ff; } 63% { border-color: #ff00ff; } 72% { border-color: #ff1493; }
             81% { border-color: #1e90ff; } 90% { border-color: #32cd32; } 100% { border-color: #ff0000; }
         }
-        /* 2. Animasi Huruf Per 3 Detik */
         @keyframes hurufWarna {
             0% { color: #ff00ff; } 9% { color: #00ffff; } 18% { color: #ffff00; }
             27% { color: #ff1493; } 36% { color: #00ff00; } 45% { color: #1e90ff; }
             54% { color: #ff4500; } 63% { color: #0000ff; } 72% { color: #8b00ff; }
             81% { color: #ff0000; } 90% { color: #32cd32; } 100% { color: #ff00ff; }
         }
-        /* 3. Animasi Bingkai Mengalir Berputar */
-        @keyframes putarMelingkar {
-            100% { transform: rotate(360deg); }
-        }
-        @keyframes putarMelingkarBalik {
-            100% { transform: rotate(-360deg); }
-        }
-        /* 4. Animasi Tombol Tambah Per 1 Detik */
+        @keyframes putarMelingkar { 100% { transform: rotate(360deg); } }
+        @keyframes putarMelingkarBalik { 100% { transform: rotate(-360deg); } }
         @keyframes tombolTambahWarna {
             0% { background-color: #ff0000; color: #fff; } 9% { background-color: #ff7f00; color: #000; }
             18% { background-color: #ffff00; color: #000; } 27% { background-color: #00ff00; color: #000; }
@@ -200,14 +264,12 @@
             72% { background-color: #ff1493; color: #fff; } 81% { background-color: #1e90ff; color: #fff; }
             90% { background-color: #32cd32; color: #000; } 100% { background-color: #ff0000; color: #fff; }
         }
-        /* 5. Animasi Kaca Pembesar Per 5 Detik */
         @keyframes iconWarna {
             0% { fill: #1e90ff; } 9% { fill: #ff0055; } 18% { fill: #00ffaa; }
             27% { fill: #ffcc00; } 36% { fill: #ff00ff; } 45% { fill: #00ffff; }
             54% { fill: #ff5722; } 63% { fill: #4caf50; } 72% { fill: #9c27b0; }
             81% { fill: #e91e63; } 90% { fill: #ffff00; } 100% { fill: #1e90ff; }
         }
-        /* 6. Animasi Tombol Kategori Per 10 Detik (Menyesuaikan Warna & Kontras Teks) */
         @keyframes kategoriWarna {
             0% { background-color: #ff0000; color: #ffffff; }
             9% { background-color: #ffffff; color: #000000; }
@@ -247,25 +309,25 @@
     </header>
 
     <div class="category-wrapper">
-        <button class="category-btn" onclick="gantiKonten('Radio')">Radio</button>
-        <button class="category-btn" onclick="gantiKonten('TV')">TV</button>
-        <button class="category-btn" onclick="gantiKonten('Video')">Video</button>
-        <button class="category-btn" onclick="gantiKonten('Musik')">Musik</button>
-        <button class="category-btn" onclick="gantiKonten('Games')">Games</button>
-        <button class="category-btn" onclick="gantiKonten('Meme')">Meme</button>
-        <button class="category-btn" onclick="gantiKonten('Quotes')">Quotes</button>
+        <button class="category-btn" onclick="selectCategory('Radio')">Radio</button>
+        <button class="category-btn" onclick="selectCategory('TV')">TV</button>
+        <button class="category-btn" onclick="selectCategory('Video')">Video</button>
+        <button class="category-btn" onclick="selectCategory('Musik')">Musik</button>
+        <button class="category-btn" onclick="selectCategory('Games')">Games</button>
+        <button class="category-btn" onclick="selectCategory('Meme')">Meme</button>
+        <button class="category-btn" onclick="selectCategory('Quotes')">Quotes</button>
     </div>
 
     <div class="content-display" id="contentDisplay">
-        Silakan pilih kategori di atas untuk memuat grup media embed.
+        <div style="text-align: center; color: #555; padding-top: 40px;">Memuat data...</div>
     </div>
 
     <script type="module">
-        // Menggunakan SDK Firebase Web standar berbasis CDN agar kompatibel langsung di file .html biasa
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        // Import Firestore untuk penarikan data (realtime)
+        import { getFirestore, collection, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-        // Konfigurasi Web App Firebase milikmu
         const firebaseConfig = {
           apiKey: "AIzaSyDrEQ7GcPPo8CbqF0_dRwDlXSXbz1FsmPs",
           authDomain: "hahahihi-5084e.firebaseapp.com",
@@ -275,25 +337,82 @@
           appId: "1:691544964510:web:561a1aed05c8a8f5ff6a8f"
         };
 
-        // Initialize Firebase
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
+        const db = getFirestore(app);
 
-        // Ambil data foto profil user secara dinamis dari akun Google pendaftar
+        let allEmbedData = [];
+        let currentSelectedCategory = "Radio"; // Kategori default awal buka halaman
+
+        // Ambil data profil Google Auth
         onAuthStateChanged(auth, (user) => {
             if (user && user.photoURL) {
                 document.getElementById('userAvatar').src = user.photoURL;
-                console.log("Foto profil berhasil dimuat dari Google Auth!");
             }
         });
-    </script>
 
-    <script>
-        // Logika manajemen pengelompokan konten kumpul sesuai kategori induk
-        function gantiKonten(kategori) {
-            const display = document.getElementById('contentDisplay');
-            display.innerHTML = `Menampilkan kelompok data embed untuk: <strong>${kategori}</strong><br><br><span style="font-size:14px; color:#666;">[Tempat list komponen embed khusus kelompok ${kategori}]</span>`;
+        // 1. Ambil data secara Realtime dari Firestore ('embeds')
+        const q = query(collection(db, "embeds"), orderBy("createdAt", "desc"));
+        onSnapshot(q, (snapshot) => {
+            allEmbedData = [];
+            snapshot.forEach((doc) => {
+                allEmbedData.push({ id: doc.id, ...doc.data() });
+            });
+            // Segarkan tampilan sesuai kategori yang sedang dipilih saat ini
+            renderEmbedsByCategory(currentSelectedCategory);
+        }, (error) => {
+            console.error("Gagal mengambil data dari firestore: ", error);
+        });
+
+        // Fungsi Filter & Render komponen
+        function renderEmbedsByCategory(kategori) {
+            currentSelectedCategory = kategori;
+            const displayZone = document.getElementById('contentDisplay');
+            displayZone.innerHTML = ""; // Bersihkan kontainer
+
+            // Filter data yang sesuai dengan kategori aktif
+            const filteredData = allEmbedData.filter(item => item.kategori === kategori);
+
+            // 6. Jika data kosong, tampilkan tombol jumbo "+tambahkan" putih tebal besar
+            if(filteredData.length === 0) {
+                displayZone.innerHTML = `
+                    <div class="empty-state">
+                        <a href="tambah.html" class="btn-empty-add">+Tambahkan</a>
+                    </div>
+                `;
+                return;
+            }
+
+            // 2. Loop dan buat baris data jika isi database ada
+            filteredData.forEach(item => {
+                // Menghasilkan angka penonton acak real-time fiktif (misal antara 50 - 5000)
+                const randomViewers = Math.floor(Math.random() * 4950) + 50;
+
+                // 3. Membuat variasi jeda acak (random animation delay) agar pergantian warna tidak serempak
+                const randomDelay = (Math.random() * -10).toFixed(1) + 's';
+
+                const card = document.createElement('a');
+                card.className = 'embed-card';
+                // Masukkan link tujuan beserta parameter id/link tujuan agar bisa diputar di tonton.html
+                card.href = `tonton.html?id=${item.id}&link=${encodeURIComponent(item.linkFinal)}&name=${encodeURIComponent(item.nama)}`;
+                card.style.animationDelay = randomDelay; // Terapkan delay mandiri (Poin 3)
+
+                card.innerHTML = `
+                    <div class="embed-thumb-box">
+                        <img src="${item.thumbnail || 'https://images.unsplash.com/photo-1614850523459-c2f4c699c52e?q=80&w=150'}" alt="Thumb">
+                    </div>
+                    <div class="embed-info">
+                        <div class="embed-name">${item.nama}</div>
+                        <div class="embed-viewers">${randomViewers.toLocaleString('id-ID')} menyaksikan</div>
+                        <div class="embed-tag">${item.kategori} Hub</div>
+                    </div>
+                `;
+                displayZone.appendChild(card);
+            });
         }
+
+        // Ekspos fungsi ke scope window agar bisa dipicu dari atribut onClick HTML tombol kategori
+        window.selectCategory = renderEmbedsByCategory;
     </script>
 </body>
 </html>
