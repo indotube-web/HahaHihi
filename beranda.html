@@ -1,126 +1,398 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Beranda - HahaHihi</title>
-    <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { background-color: #000000; font-family: sans-serif; color: #ffffff; min-height: 100vh; }
-        header { display: flex; justify-content: space-between; align-items: center; padding: 20px; border-bottom: 1px solid #222; }
-        .logo-box { padding: 10px 20px; border: 3px solid #fff; border-radius: 8px; font-weight: 900; }
-        .category-wrapper { width: 100%; overflow-x: auto; padding: 20px; white-space: nowrap; scrollbar-width: none; }
-        .category-btn { padding: 14px 32px; margin-right: 15px; border-radius: 30px; font-weight: 900; cursor: pointer; border: none; background: #333; color: #fff; }
-        .content-display { padding: 10px 20px; max-width: 800px; margin: 0 auto; display: flex; flex-direction: column; gap: 15px; }
-        
-        .embed-card { display: flex; align-items: center; padding: 12px; background-color: #111; border: 3px solid #fff; border-radius: 12px; cursor: pointer; transition: 0.3s; }
-        .embed-card.is-playing { border-color: #00ff66 !important; box-shadow: 0 0 15px rgba(0, 255, 102, 0.3); }
-        .embed-thumb-box { width: 120px; height: 80px; border-radius: 8px; overflow: hidden; margin-right: 15px; flex-shrink: 0; background: #000; display: flex; align-items: center; justify-content: center; }
-        .embed-thumb-box img { width: 100%; height: 100%; object-fit: cover; }
-        .embed-name { font-size: 18px; font-weight: 800; }
-        .embed-viewers { color: #00ff66; font-size: 14px; font-weight: 600; }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Beranda - HahaHihi</title>
+<style>
+/* --- 1. Background Hitam & Reset --- */
+* {
+box-sizing: border-box;
+margin: 0;
+padding: 0;
+}
+body {
+background-color: #000000;
+font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+color: #ffffff;
+min-height: 100vh;
+overflow-x: hidden;
+}
+
+/* --- Layout Header --- */
+header {
+display: flex;
+justify-content: space-between;
+align-items: center;
+padding: 20px;
+border-bottom: 1px solid #222;
+}
+
+/* --- 2. Logo HahaHihi --- */
+.logo-box {
+padding: 10px 20px;
+border: 3px solid #fff;
+border-radius: 8px;
+display: inline-block;
+font-size: 24px;
+font-weight: 900;
+letter-spacing: 1px;
+animation: bingkaiWarna 11s infinite linear;
+}
+.logo-box span { display: inline-block; animation: hurufWarna 3s infinite steps(1); }
+.logo-box span:nth-child(1) { animation-delay: 0.1s; }
+.logo-box span:nth-child(2) { animation-delay: 0.4s; }
+.logo-box span:nth-child(3) { animation-delay: 0.7s; }
+.logo-box span:nth-child(4) { animation-delay: 1.0s; }
+.logo-box span:nth-child(5) { animation-delay: 1.3s; }
+.logo-box span:nth-child(6) { animation-delay: 1.6s; }
+.logo-box span:nth-child(7) { animation-delay: 1.9s; }
+.logo-box span:nth-child(8) { animation-delay: 2.2s; }
+
+.header-right { display: flex; align-items: center; gap: 15px; }
+
+/* --- 5. Icon Kaca Pembesar --- */
+.search-icon {
+width: 28px;
+height: 28px;
+cursor: pointer;
+animation: iconWarna 55s infinite steps(1);
+}
+
+/* --- Tombol +Tambahkan --- */
+.btn-tambah {
+background-color: transparent;
+font-size: 14px;
+font-weight: bold;
+padding: 10px 20px;
+border-radius: 25px;
+cursor: pointer;
+text-decoration: none;
+display: inline-block;
+animation: tombolTambahWarna 11s infinite linear;
+transition: transform 0.2s;
+}
+.btn-tambah:active { transform: scale(0.95); }
+
+/* --- Profil --- */
+.profile-container {
+position: relative;
+width: 46px;
+height: 46px;
+border-radius: 50%;
+display: flex;
+align-items: center;
+justify-content: center;
+cursor: pointer;
+background: conic-gradient(#ff0000, #ff7f00, #ffff00, #00ff00, #00ffff, #0000ff, #8b00ff, #ff00ff, #ff1493, #1e90ff, #ff0000);
+animation: putarMelingkar 3s infinite linear;
+}
+.profile-border-inner {
+width: 40px;
+height: 40px;
+border-radius: 50%;
+background: #000;
+display: flex;
+align-items: center;
+justify-content: center;
+overflow: hidden;
+}
+.profile-container img {
+width: 100%;
+height: 100%;
+object-fit: cover;
+animation: putarMelingkarBalik 3s infinite linear;
+}
+
+/* --- Kategori --- */
+.category-wrapper {
+width: 100%;
+overflow-x: auto;
+white-space: nowrap;
+padding: 20px;
+scrollbar-width: none;
+}
+.category-wrapper::-webkit-scrollbar { display: none; }
+.category-btn {
+display: inline-block;
+padding: 14px 32px;
+margin-right: 15px;
+border-radius: 30px;
+font-weight: 900;
+font-size: 18px;
+ cursor: pointer;
+border: none;
+outline: none;
+transition: transform 0.2s;
+animation: kategoriWarna 110s infinite steps(1);
+}
+.category-btn:active { transform: scale(0.95); }
+
+.category-wrapper .category-btn:nth-child(1) { animation-delay: 0s; }
+.category-wrapper .category-btn:nth-child(2) { animation-delay: 2s; }
+.category-wrapper .category-btn:nth-child(3) { animation-delay: 4s; }
+.category-wrapper .category-btn:nth-child(4) { animation-delay: 6s; }
+.category-wrapper .category-btn:nth-child(5) { animation-delay: 8s; }
+.category-wrapper .category-btn:nth-child(6) { animation-delay: 10s; }
+.category-wrapper .category-btn:nth-child(7) { animation-delay: 12s; }
+
+.content-display {
+padding: 10px 20px;
+margin: 0 auto;
+max-width: 800px;
+display: flex;
+flex-direction: column;
+gap: 15px;
+}
+
+/* --- Item List (DIUBAH MENJADI DIV, BUKAN LINK) --- */
+.embed-card {
+display: flex;
+align-items: center;
+padding: 12px;
+background-color: #111;
+border: 3px solid #fff;
+border-radius: 12px;
+color: #fff;
+cursor: pointer;
+transition: transform 0.2s, box-shadow 0.2s;
+animation: bingkaiWarna 11s infinite linear;
+user-select: none;
+}
+.embed-card:hover { transform: translateY(-2px); }
+
+/* Indikator visual saat konten sedang berputar (PLAY) */
+.embed-card.is-playing {
+border-color: #00ff66 !important;
+animation: none;
+box-shadow: 0 0 15px rgba(0, 255, 102, 0.5);
+}
+
+.embed-thumb-box {
+width: 120px; /* Diperlebar sedikit agar video lebih enak dilihat saat play */
+height: 80px;
+border-radius: 8px;
+overflow: hidden;
+margin-right: 15px;
+flex-shrink: 0;
+background-color: #222;
+}
+.embed-thumb-box img {
+width: 100%;
+height: 100%;
+object-fit: cover;
+}
+
+.embed-info {
+display: flex;
+flex-direction: column;
+gap: 4px;
+flex-grow: 1;
+}
+.embed-name { font-size: 18px; font-weight: 800; }
+.embed-viewers {
+font-size: 14px;
+color: #00ff66;
+font-weight: 600;
+display: flex;
+align-items: center;
+gap: 5px;
+}
+.embed-viewers::before { content: '●'; color: #00ff66; }
+.embed-tag { font-size: 12px; color: #aaa; text-transform: uppercase; letter-spacing: 0.5px; }
+
+.empty-state { text-align: center; padding: 60px 20px; }
+.btn-empty-add {
+display: inline-block; color: #ffffff; font-size: 28px; font-weight: 900;
+text-decoration: none; border: 4px dashed #ffffff; padding: 20px 50px;
+border-radius: 16px; transition: background-color 0.3s, transform 0.2s;
+}
+.btn-empty-add:hover { background-color: #222; transform: scale(1.05); }
+
+/* KEYFRAMES TETAP SAMA */
+@keyframes bingkaiWarna { 0% { border-color: #ff0000; } 9% { border-color: #ff7f00; } 18% { border-color: #ffff00; } 27% { border-color: #00ff00; } 36% { border-color: #00ffff; } 45% { border-color: #0000ff; } 54% { border-color: #8b00ff; } 63% { border-color: #ff00ff; } 72% { border-color: #ff1493; } 81% { border-color: #1e90ff; } 90% { border-color: #32cd32; } 100% { border-color: #ff0000; } }
+@keyframes hurufWarna { 0% { color: #ff00ff; } 9% { color: #00ffff; } 18% { color: #ffff00; } 27% { color: #ff1493; } 36% { color: #00ff00; } 45% { color: #1e90ff; } 54% { color: #ff4500; } 63% { color: #0000ff; } 72% { color: #8b00ff; } 81% { color: #ff0000; } 90% { color: #32cd32; } 100% { color: #ff00ff; } }
+@keyframes putarMelingkar { 100% { transform: rotate(360deg); } }
+@keyframes putarMelingkarBalik { 100% { transform: rotate(-360deg); } }
+@keyframes tombolTambahWarna { 0% { background-color: #ff0000; color: #fff; } 9% { background-color: #ff7f00; color: #000; } 18% { background-color: #ffff00; color: #000; } 27% { background-color: #00ff00; color: #000; } 36% { background-color: #00ffff; color: #000; } 45% { background-color: #0000ff; color: #fff; } 54% { background-color: #8b00ff; color: #fff; } 63% { background-color: #ff00ff; color: #fff; } 72% { background-color: #ff1493; color: #fff; } 81% { background-color: #1e90ff; color: #fff; } 90% { background-color: #32cd32; color: #000; } 100% { background-color: #ff0000; color: #fff; } }
+@keyframes iconWarna { 0% { fill: #1e90ff; } 9% { fill: #ff0055; } 18% { fill: #00ffaa; } 27% { fill: #ffcc00; } 36% { fill: #ff00ff; } 45% { fill: #00ffff; } 54% { fill: #ff5722; } 63% { fill: #4caf50; } 72% { fill: #9c27b0; } 81% { fill: #e91e63; } 90% { fill: #ffff00; } 100% { fill: #1e90ff; } }
+@keyframes kategoriWarna { 0% { background-color: #ff0000; color: #ffffff; } 9% { background-color: #ffffff; color: #000000; } 18% { background-color: #00ff00; color: #000000; } 27% { background-color: #0000ff; color: #ffffff; } 36% { background-color: #ffff00; color: #000000; } 45% { background-color: #ff00ff; color: #ffffff; } 54% { background-color: #00ffff; color: #000000; } 63% { background-color: #ff8c00; color: #ffffff; } 72% { background-color: #8b00ff; color: #ffffff; } 81% { background-color: #ff1493; color: #ffffff; } 90% { background-color: #1e90ff; color: #ffffff; } 100% { background-color: #ff0000; color: #ffffff; } }
+</style>
 </head>
 <body>
 
-    <header>
-        <div class="logo-box">HahaHihi</div>
-        <div id="userAvatar" style="width:40px; height:40px; border-radius:50%; background:#333;"></div>
-    </header>
+<header>
+<div class="logo-box">
+<span>H</span><span>a</span><span>h</span><span>a</span><span>H</span><span>i</span><span>h</span><span>i</span>
+</div>
+<div class="header-right">
+<svg class="search-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+<path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z" stroke="currentColor" stroke-width="1.5"/>
+</svg>
+<a href="tambah.html" class="btn-tambah" id="btnTambah">+Tambahkan</a>
+<div class="profile-container">
+<div class="profile-border-inner">
+<img id="userAvatar" src="https://www.w3schools.com/howto/img_avatar.png" alt="Profil">
+</div>
+</div>
+</div>
+</header>
 
-    <div class="category-wrapper">
-        <button class="category-btn" onclick="render('Radio')">Radio</button>
-        <button class="category-btn" onclick="render('TV')">TV</button>
-        <button class="category-btn" onclick="render('Video')">Video</button>
-    </div>
+<div class="category-wrapper">
+<button class="category-btn" onclick="selectCategory('Radio')">Radio</button>
+<button class="category-btn" onclick="selectCategory('TV')">TV</button>
+<button class="category-btn" onclick="selectCategory('Video')">Video</button>
+<button class="category-btn" onclick="selectCategory('Musik')">Musik</button>
+<button class="category-btn" onclick="selectCategory('Games')">Games</button>
+<button class="category-btn" onclick="selectCategory('Meme')">Meme</button>
+<button class="category-btn" onclick="selectCategory('Quotes')">Quotes</button>
+</div>
 
-    <div class="content-display" id="contentDisplay">Memuat data...</div>
+<div class="content-display" id="contentDisplay">
+<div style="text-align: center; color: #555; padding-top: 40px;">Memuat data...</div>
+</div>
 
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, collection, onSnapshot, doc, updateDoc, increment } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+// Tambahan import updateDoc & doc untuk nambah/kurang penonton
+import { getFirestore, collection, onSnapshot, query, orderBy, doc, updateDoc, increment } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-        const firebaseConfig = {
-          apiKey: "AIzaSyDrEQ7GcPPo8CbqF0_dRwDlXSXbz1FsmPs",
-          authDomain: "hahahihi-5084e.firebaseapp.com",
-          projectId: "hahahihi-5084e",
-          storageBucket: "hahahihi-5084e.firebasestorage.app",
-          messagingSenderId: "691544964510",
-          appId: "1:691544964510:web:561a1aed05c8a8f5ff6a8f"
-        };
+const firebaseConfig = {
+apiKey: "AIzaSyDrEQ7GcPPo8CbqF0_dRwDlXSXbz1FsmPs",
+authDomain: "hahahihi-5084e.firebaseapp.com",
+projectId: "hahahihi-5084e",
+storageBucket: "hahahihi-5084e.firebasestorage.app",
+messagingSenderId: "691544964510",
+appId: "1:691544964510:web:561a1aed05c8a8f5ff6a8f"
+};
 
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
 
-        let allData = [];
-        window.activeSessions = {};
+let allEmbedData = [];
+let currentSelectedCategory = "Radio";
+let isInitialRender = true;
 
-        onSnapshot(collection(db, "embeds"), (snap) => {
-            allData = snap.docs.map(d => ({id: d.id, ...d.data()}));
-            render('Radio');
-        });
+// Objek untuk melacak status video yang sedang kamu putar di hp-mu sendiri
+window.activePlayingSessions = {};
 
-        window.render = (cat) => {
-            const display = document.getElementById('contentDisplay');
-            display.innerHTML = "";
-            allData.filter(i => i.kategori === cat).forEach(item => {
-                const card = document.createElement('div');
-                card.className = `embed-card ${window.activeSessions[item.id] ? 'is-playing' : ''}`;
-                card.id = `card-${item.id}`;
-                card.onclick = () => togglePlay(item);
-                card.innerHTML = `
-                    <div class="embed-thumb-box" id="box-${item.id}">
-                        ${window.activeSessions[item.id] ? (item.linkFinal.includes('rastream') ? '<span>Mendengarkan...</span>' : `<iframe src="${item.linkFinal}" style="width:100%;height:100%;border:none;"></iframe>`) : `<img src="${item.thumbnail}">`}
-                    </div>
-                    <div class="embed-info">
-                        <div class="embed-name">${item.nama}</div>
-                        <div class="embed-viewers"><span id="v-${item.id}">${item.penontonAktif || 0}</span> menyaksikan</div>
-                    </div>
-                `;
-                display.appendChild(card);
-            });
-        };
+onAuthStateChanged(auth, (user) => {
+if (user && user.photoURL) {
+document.getElementById('userAvatar').src = user.photoURL;
+}
+});
 
-        window.togglePlay = async (item) => {
-            const box = document.getElementById(`box-${item.id}`);
-            const card = document.getElementById(`card-${item.id}`);
+const q = query(collection(db, "embeds"), orderBy("createdAt", "desc"));
+onSnapshot(q, (snapshot) => {
+const newData = [];
+snapshot.forEach((doc) => {
+newData.push({ id: doc.id, ...doc.data() });
+});
+allEmbedData = newData;
 
-            if (!window.activeSessions[item.id]) {
-                // START
-                window.activeSessions[item.id] = true;
-                card.classList.add('is-playing');
-                
-                if (item.linkFinal.includes('rastream')) {
-                    const audio = new Audio(item.linkFinal);
-                    audio.play();
-                    window.activeSessions[`audio-${item.id}`] = audio;
-                    box.innerHTML = `<span>Sedang Berbunyi...</span>`;
-                } else {
-                    box.innerHTML = `<iframe src="${item.linkFinal}" style="width:100%;height:100%;border:none;"></iframe>`;
-                }
-                await updateDoc(doc(db, "embeds", item.id), { penontonAktif: increment(1) });
-            } else {
-                // STOP
-                delete window.activeSessions[item.id];
-                card.classList.remove('is-playing');
-                
-                if (window.activeSessions[`audio-${item.id}`]) {
-                    window.activeSessions[`audio-${item.id}`].pause();
-                    delete window.activeSessions[`audio-${item.id}`];
-                }
-                
-                box.innerHTML = `<img src="${item.thumbnail}">`;
-                await updateDoc(doc(db, "embeds", item.id), { penontonAktif: increment(-1) });
-            }
-        };
+const displayZone = document.getElementById('contentDisplay');
+const currentCards = displayZone.querySelectorAll('.embed-card');
+const filteredData = allEmbedData.filter(item => item.kategori === currentSelectedCategory);
 
-        window.addEventListener('beforeunload', () => {
-            Object.keys(window.activeSessions).forEach(id => {
-                if (!id.startsWith('audio-')) {
-                    updateDoc(doc(db, "embeds", id), { penontonAktif: increment(-1) });
-                }
-            });
-        });
-    </script>
+// LOGIKA PINTAR: Supaya video tidak tiba-tiba berhenti saat ada update penonton
+if (currentCards.length !== filteredData.length || isInitialRender) {
+renderEmbedsByCategory(currentSelectedCategory);
+isInitialRender = false;
+} else {
+// Update angka penonton saja secara diam-diam
+filteredData.forEach(item => {
+const viewerSpan = document.getElementById(viewers-${item.id}`);
+if (viewerSpan) {
+viewerSpan.innerText = (item.penontonAktif || 0).toLocaleString('id-ID');
+}
+});
+}
+}, (error) => {
+console.error("Gagal mengambil data dari firestore: ", error);
+});
+
+function renderEmbedsByCategory(kategori) {
+currentSelectedCategory = kategori;
+const displayZone = document.getElementById('contentDisplay');
+displayZone.innerHTML = "";
+
+const filteredData = allEmbedData.filter(item => item.kategori === kategori);
+
+if(filteredData.length === 0) {
+displayZone.innerHTML = &lt;div class="empty-state"&gt; &lt;a href="tambah.html" class="btn-empty-add"&gt;+Tambahkan&lt;/a&gt; &lt;/div&gt;;
+return;
+}
+
+filteredData.forEach(item => {
+const randomDelay = (Math.random() * -10).toFixed(1) + 's';
+// Penonton nyata (default 0)
+const realViewers = item.penontonAktif || 0;
+const thumbUrl = item.thumbnail || 'https://images.unsplash.com/photo-1614850523459-c2f4c699c52e?q=80&w=150';
+
+const card = document.createElement('div');
+card.className = 'embed-card';
+card.id = card-${item.id}`;
+card.style.animationDelay = randomDelay;
+
+// Fungsi Klik yang Mengontrol Play & Stop inline
+card.onclick = () => window.togglePlay(item.id, item.linkFinal, thumbUrl);
+
+card.innerHTML = &lt;div class="embed-thumb-box" id="box-${item.id}">
+<img src="${thumbUrl}" alt="Thumb"&gt; &lt;/div&gt; &lt;div class="embed-info"&gt; &lt;div class="embed-name"&gt;${item.nama}</div>
+<div class="embed-viewers"><span id="viewers-${item.id}"&gt;${realViewers.toLocaleString('id-ID')}</span> menyaksikan</div>
+<div class="embed-tag">${item.kategori} Hub&lt;/div&gt; &lt;/div&gt;;
+displayZone.appendChild(card);
+});
+}
+
+window.selectCategory = (kategori) => {
+isInitialRender = true; // Paksa gambar ulang bingkai
+renderEmbedsByCategory(kategori);
+};
+
+// --- SISTEM PLAY & STOP (INLINE) ---
+window.togglePlay = async (id, link, thumbUrl) => {
+const cardElement = document.getElementById(card-${id}); const box = document.getElementById(box-${id});
+const isPlaying = window.activePlayingSessions[id];
+
+if (!isPlaying) {
+// 1. UBAH JADI PLAY
+window.activePlayingSessions[id] = true;
+cardElement.classList.add('is-playing');
+
+// Tambahkan kode autoplay jika itu link YouTube
+let playLink = link;
+if(playLink.includes('youtube.com/embed')) {
+const sep = playLink.includes('?') ? '&' : '?';
+playLink += ${sep}autoplay=1`;
+}
+
+// Ganti Thumbnail dengan Iframe Video
+box.innerHTML = <iframe src="${playLink}" allow="autoplay; fullscreen" style="width:100%; height:100%; border:none; pointer-events:auto;" allowfullscreen></iframe>`;
+
+// Nambah 1 penonton di Database
+await updateDoc(doc(db, "embeds", id), { penontonAktif: increment(1) });
+} else {
+// 2. UBAH JADI STOP
+delete window.activePlayingSessions[id];
+cardElement.classList.remove('is-playing');
+
+// Kembalikan ke Gambar Thumbnail
+box.innerHTML = <img src="${thumbUrl}" alt="Thumb">;
+
+// Kurang 1 penonton di Database
+await updateDoc(doc(db, "embeds", id), { penontonAktif: increment(-1) });
+}
+};
+
+// Otomatis kurangi jumlah penonton jika user tiba-tiba close tab/browser saat video masih play
+window.addEventListener('beforeunload', () => {
+Object.keys(window.activePlayingSessions).forEach(id => {
+updateDoc(doc(db, "embeds", id), { penontonAktif: increment(-1) });
+});
+});
+</script>
 </body>
 </html>
