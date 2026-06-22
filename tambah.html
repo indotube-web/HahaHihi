@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tambah Embed - HahaHihi</title>
+    <style>
+        /* --- 1. Background Hitam & Reset --- */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            background-color: #000000;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            color: #ffffff;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        .form-container {
+            background-color: #111111;
+            border: 1px solid #222222;
+            border-radius: 16px;
+            padding: 30px;
+            width: 100%;
+            max-width: 500px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            z-index: 10;
+        }
+
+        h2 {
+            margin-bottom: 25px;
+            text-align: center;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 14px;
+            color: #aaa;
+            font-weight: 600;
+        }
+
+        /* --- 2. Kolom Input Link --- */
+        .input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        input[type="text"], select {
+            width: 100%;
+            padding: 14px 45px 14px 16px;
+            background-color: #1a1a1a;
+            border: 2px solid #333;
+            border-radius: 8px;
+            color: #fff;
+            font-size: 16px;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        input[type="text"]:focus, select:focus {
+            border-color: #555;
+        }
+
+        input[disabled] {
+            background-color: #252525;
+            border-color: #444;
+            color: #888;
+            cursor: not-allowed;
+        }
+
+        /* Status Ikon Validasi di Kanan Kolom */
+        .status-icon {
+            position: absolute;
+            right: 15px;
+            font-size: 20px;
+            font-weight: bold;
+            display: none;
+            user-select: none;
+        }
+        .status-icon.valid { color: #00ff66; display: block; } /* Centang Hijau */
+        .status-icon.modified { color: #ff3333; display: block; } /* Silang Merah */
+
+        .modified-box {
+            margin-top: 8px;
+            background-color: #2a1414;
+            border: 1px solid #551a1a;
+            padding: 10px;
+            border-radius: 6px;
+            font-size: 13px;
+            color: #ff9999;
+            word-break: break-all;
+            display: none;
+        }
+
+        /* --- 3 & 4 & 5. Hasil Validasi Pre-Embed --- */
+        .preview-box {
+            background-color: #161616;
+            border: 1px solid #222;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 15px;
+            display: none;
+            text-align: center;
+        }
+
+        .preview-thumb {
+            width: 100%;
+            max-height: 200px;
+            object-fit: cover;
+            border-radius: 6px;
+            margin-bottom: 12px;
+            background-color: #000;
+        }
+
+        .preview-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 5px;
+        }
+
+        .preview-category {
+            display: inline-block;
+            padding: 4px 12px;
+            background-color: #333;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            color: #ddd;
+        }
+
+        /* --- 6 & 9. Tombol Kontrol / Actions --- */
+        .action-buttons {
+            display: flex;
+            justify-content: space-between;
+            gap: 15px;
+            margin-top: 25px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 14px;
+            font-size: 16px;
+            font-weight: bold;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+            transition: opacity 0.2s, transform 0.1s;
+        }
+        .btn:active { transform: scale(0.98); }
+
+        /* 6. Tombol Batal Abu-abu */
+        .btn-batal {
+            background-color: #444444;
+            color: #ffffff;
+        }
+        .btn-batal:hover { background-color: #555555; }
+
+        /* 6 & 9. Tombol Kirim (Disembunyikan secara default) */
+        .btn-kirim {
+            background-color: #00ffff;
+            color: #000000;
+            display: none; /* Aturan 9 */
+        }
+        .btn-kirim:hover { opacity: 0.9; }
+
+        /* --- 10. Elemen Bintang Canvas --- */
+        .star-particle {
+            position: absolute;
+            pointer-events: none;
+            font-size: 14px;
+            z-index: 1000;
+            animation: kaburBintang 3s ease-out forwards;
+        }
+
+        @keyframes kaburBintang {
+            0% {
+                transform: translate(0, 0) rotate(0deg) scale(1);
+                opacity: 1;
+            }
+            100% {
+                transform: translate(var(--mx), var(--my)) rotate(var(--rot)), scale(0);
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="form-container">
+        <h2>Tambah Komponen Embed</h2>
+        
+        <div class="form-group">
+            <label for="linkInput">Masukkan URL Berkas / Aliran Embed</label>
+            <div class="input-wrapper">
+                <input type="text" id="linkInput" placeholder="link">
+                <div id="statusIcon" class="status-icon"></div>
+            </div>
+            <div id="modifiedBox" class="modified-box"></div>
+        </div>
+
+        <div class="form-group">
+            <label for="titleInput">Nama Media (Ter-embed)</label>
+            <input type="text" id="titleInput" placeholder="Nama konten atau judul media...">
+        </div>
+
+        <div class="form-group">
+            <label for="categorySelect">Kategori Embed</label>
+            <select id="categorySelect">
+                <option value="Radio">Radio</option>
+                <option value="TV">TV</option>
+                <option value="Video">Video</option>
+                <option value="Musik">Musik</option>
+                <option value="Games">Games</option>
+                <option value="Meme">Meme</option>
+                <option value="Quotes">Quotes</option>
+            </select>
+        </div>
+
+        <div class="preview-box" id="previewBox">
+            <img id="previewImg" class="preview-thumb" src="" alt="Thumbnail">
+            <div id="previewTitle" class="preview-title">-</div>
+            <div id="previewCat" class="preview-category">-</div>
+        </div>
+
+        <div class="action-buttons">
+            <a href="beranda.html" class="btn btn-batal">Batal</a>
+            <button id="btnKirim" class="btn btn-kirim">Kirim</button>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+          apiKey: "AIzaSyDrEQ7GcPPo8CbqF0_dRwDlXSXbz1FsmPs",
+          authDomain: "hahahihi-5084e.firebaseapp.com",
+          projectId: "hahahihi-5084e",
+          storageBucket: "hahahihi-5084e.firebasestorage.app",
+          messagingSenderId: "691544964510",
+          appId: "1:691544964510:web:561a1aed05c8a8f5ff6a8f"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        const linkInput = document.getElementById('linkInput');
+        const titleInput = document.getElementById('titleInput');
+        const categorySelect = document.getElementById('categorySelect');
+        const statusIcon = document.getElementById('statusIcon');
+        const modifiedBox = document.getElementById('modifiedBox');
+        const previewBox = document.getElementById('previewBox');
+        const btnKirim = document.getElementById('btnKirim');
+
+        let finalUsedLink = "";
+
+        // --- 2. LOGIKA VALIDASI & MODIFIKASI LINK OTOMATIS ---
+        linkInput.addEventListener('input', function() {
+            let url = linkInput.value.trim();
+            if(url === "") {
+                resetValidation();
+                return;
+            }
+
+            // Contoh Modifikasi: Validasi jika pengguna memasukkan link nonton YouTube biasa, diubah ke format /embed/
+            if (url.includes("youtube.com/watch?v=") || url.includes("youtu.be/")) {
+                let videoId = "";
+                if(url.includes("v=")) {
+                    videoId = url.split('v=')[1].split('&')[0];
+                } else {
+                    videoId = url.split('/').pop().split('?')[0];
+                }
+                
+                finalUsedLink = `https://www.youtube.com/embed/${videoId}`;
+                
+                // Set Status Tanda Silang Merah karena harus dimodifikasi (Poin 2)
+                statusIcon.className = "status-icon modified";
+                statusIcon.innerHTML = "&#10006;"; // Simbol Silang ✖
+                
+                // Tampilkan info link modifikasi & kunci input kolom
+                modifiedBox.style.display = "block";
+                modifiedBox.innerHTML = `<strong>Link Dimodifikasi agar Kompeten:</strong><br>${finalUsedLink}`;
+                linkInput.disabled = true;
+
+                // Set otomatis Thumbnail & Judul bawaan YouTube (Poin 3 & 4)
+                document.getElementById('previewImg').src = `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`;
+                if(titleInput.value === "") titleInput.value = "YouTube Video Stream";
+                categorySelect.value = "Video";
+                updateLivePreview();
+                
+            } else {
+                // Jika link aman/langsung siap pakai (misal stream radio langsung atau m3u8)
+                finalUsedLink = url;
+                
+                // Set Status Centang Hijau (Poin 2)
+                statusIcon.className = "status-icon valid";
+                statusIcon.innerHTML = "&#10004;"; // Simbol Centang ✔
+                modifiedBox.style.display = "none";
+                
+                // Gunakan gambar placeholder atau avatar bawaan (Poin 3)
+                document.getElementById('previewImg').src = "https://images.unsplash.com/photo-1614850523459-c2f4c699c52e?q=80&w=300&auto=format&fit=crop";
+                updateLivePreview();
+            }
+
+            // Periksa kesiapan tombol Kirim (Poin 9)
+            cekKesiapanPosting();
+        });
+
+        // Sinkronisasi perubahan input text manual ke kotak preview bawahnya
+        titleInput.addEventListener('input', updateLivePreview);
+        categorySelect.addEventListener('change', updateLivePreview);
+
+        function updateLivePreview() {
+            if(finalUsedLink !== "") {
+                previewBox.style.display = "block";
+                document.getElementById('previewTitle').innerText = titleInput.value || "Nama belum diisi";
+                document.getElementById('previewCat').innerText = categorySelect.value;
+            }
+        }
+
+        function resetValidation() {
+            statusIcon.style.display = "none";
+            modifiedBox.style.display = "none";
+            previewBox.style.display = "none";
+            btnKirim.style.display = "none";
+            linkInput.disabled = false;
+            finalUsedLink = "";
+        }
+
+        function cekKesiapanPosting() {
+            // Jika link ada dan judul terisi, maka munculkan tombol Kirim (Poin 9)
+            if(finalUsedLink !== "" && titleInput.value.trim() !== "") {
+                btnKirim.style.display = "block";
+            } else {
+                btnKirim.style.display = "none";
+            }
+        }
+
+        // --- 8. LOGIKA TOMBOL KIRIM (POSTING, SIMPAN, REDIRECT) ---
+        btnKirim.addEventListener('click', async function(e) {
+            // Trigger bintang Loading beruntun di area tombol pas di klik
+            taburkanBintangMeriah(e.clientX, e.clientY, 30);
+            
+            btnKirim.innerText = "Memposting...";
+            btnKirim.disabled = true;
+
+            try {
+                // Simpan/Posting paket data ke Firestore Database
+                await addDoc(collection(db, "embeds"), {
+                    linkAsli: linkInput.value,
+                    linkFinal: finalUsedLink,
+                    nama: titleInput.value,
+                    kategori: categorySelect.value,
+                    thumbnail: document.getElementById('previewImg').src,
+                    createdAt: serverTimestamp()
+                });
+                
+                console.log("Data Berhasil Tersimpan!");
+                
+                // Jeda sebentar biar taburan bintangnya terlihat sempurna sebelum dialihkan (Poin 8)
+                setTimeout(() => {
+                    window.location.href = 'beranda.html';
+                }, 1500);
+
+            } catch (error) {
+                console.error("Gagal menyimpan data ke firebase:", error);
+                // Fallback direct jika konfigurasi diblokir sistem lokal browser
+                setTimeout(() => { window.location.href = 'beranda.html'; }, 1000);
+            }
+        });
+    </script>
+
+    <script>
+        // --- 10. EFECT TABURAN BINTANG WARNA-WARNI 3 DETIK (EVENT ON SCREEN ACTION) ---
+        function buatSatuBintang(x, y) {
+            const star = document.createElement('div');
+            star.classList.add('star-particle');
+            star.innerHTML = '★'; // Karakter Bintang
+            
+            // Pewarnaan acak yang meriah (>10 variasi warna)
+            const rainbowColors = ['#ff0000', '#ff7f00', '#ffff00', '#00ff00', '#00ffff', '#0000ff', '#8b00ff', '#ff00ff', '#ff1493', '#00ffaa', '#ffcc00'];
+            star.style.color = rainbowColors[Math.floor(Math.random() * rainbowColors.length)];
+            
+            // Set koordinat posisi klik/sentuhan
+            star.style.left = `${x}px`;
+            star.style.top = `${y}px`;
+            
+            // Set arah ledakan gerak bintang acak via CSS variable
+            const movementX = (Math.random() - 0.5) * 150;
+            const movementY = (Math.random() - 0.5) * 150;
+            const rotation = `${Math.random() * 360}deg`;
+            star.style.setProperty('--mx', `${movementX}px`);
+            star.style.setProperty('--my', `${movementY}px`);
+            star.style.setProperty('--rot', rotation);
+
+            document.body.appendChild(star);
+
+            // Bersihkan elemen dari DOM tepat setelah 3 detik selesai beranimasi
+            setTimeout(() => {
+                star.remove();
+            }, 3000);
+        }
+
+        function taburkanBintangMeriah(titikX, titikY, jumlah) {
+            for (let i = 0; i < jumlah; i++) {
+                buatSatuBintang(titikX, titikY);
+            }
+        }
+
+        // Daftarkan ke global layar untuk mendeteksi setiap klik atau sentuhan jari di layar (Poin 10)
+        window.addEventListener('mousedown', function(e) {
+            taburkanBintangMeriah(e.clientX, e.clientY, 12);
+        });
+
+        window.addEventListener('touchstart', function(e) {
+            const sentuhan = e.touches[0];
+            taburkanBintangMeriah(sentuhan.clientX, sentuhan.clientY, 12);
+        });
+    </script>
+</body>
+</html>
+
