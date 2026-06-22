@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Beranda - HahaHihi</title>
+    <style>
+        /* --- 1. Background Hitam & Reset --- */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            background-color: #000000;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            color: #ffffff;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* --- Layout Header --- */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            border-bottom: 1px solid #222;
+        }
+
+        /* --- 2. Logo HahaHihi dengan Bingkai & Warna-warni Huruf --- */
+        .logo-box {
+            padding: 10px 20px;
+            border: 3px solid #fff;
+            border-radius: 8px;
+            display: inline-block;
+            font-size: 24px;
+            font-weight: 900;
+            letter-spacing: 1px;
+            /* Animasi bingkai >10 warna berganti tiap 1 detik secara kontinu */
+            animation: bingkaiWarna 11s infinite linear;
+        }
+        
+        .logo-box span {
+            display: inline-block;
+            /* Animasi huruf per 3 detik sekali berganti warna acak */
+            animation: hurufWarna 3s infinite steps(1);
+        }
+
+        /* Delay animasi tiap huruf agar memancarkan warna berbeda satu sama lain */
+        .logo-box span:nth-child(1) { animation-delay: 0.1s; }
+        .logo-box span:nth-child(2) { animation-delay: 0.4s; }
+        .logo-box span:nth-child(3) { animation-delay: 0.7s; }
+        .logo-box span:nth-child(4) { animation-delay: 1.0s; }
+        .logo-box span:nth-child(5) { animation-delay: 1.3s; }
+        .logo-box span:nth-child(6) { animation-delay: 1.6s; }
+        .logo-box span:nth-child(7) { animation-delay: 1.9s; }
+        .logo-box span:nth-child(8) { animation-delay: 2.2s; }
+
+        /* --- Area Kanan Atas --- */
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        /* --- 5. Icon Kaca Pembesar Tebal (Berganti >10 Warna per 5 Detik) --- */
+        .search-icon {
+            width: 28px;
+            height: 28px;
+            cursor: pointer;
+            animation: iconWarna 55s infinite steps(1);
+        }
+
+        /* --- 4 & 7. Tombol +Tambahkan (Sudut Melengkung, Berganti >10 Warna per 1 Detik) --- */
+        .btn-tambah {
+            background-color: transparent;
+            font-size: 14px;
+            font-weight: bold;
+            padding: 10px 20px;
+            border-radius: 25px; /* Sudut melengkung */
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            animation: tombolTambahWarna 11s infinite linear;
+            transition: transform 0.2s;
+        }
+        .btn-tambah:active {
+            transform: scale(0.95);
+        }
+
+        /* --- 3. Lingkaran Foto Profil Mengalir Melingkar Berputar 3 Detik --- */
+        .profile-container {
+            position: relative;
+            width: 46px;
+            height: 46px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            background: conic-gradient(#ff0000, #ff7f00, #ffff00, #00ff00, #00ffff, #0000ff, #8b00ff, #ff00ff, #ff1493, #1e90ff, #ff0000);
+            animation: putarMelingkar 3s infinite linear;
+        }
+        .profile-border-inner {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+        .profile-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            /* Mencegah gambar ikut berputar mengikuti bingkainya */
+            animation: putarMelingkarBalik 3s infinite linear;
+        }
+
+        /* --- 6. Bar Kategori (Scroll Kanan-Kiri & Ganti Warna Tiap 10 Detik + Kontras Tulisan) --- */
+        .category-wrapper {
+            width: 100%;
+            overflow-x: auto;
+            white-space: nowrap;
+            padding: 15px 20px;
+            scrollbar-width: none; /* Sembunyikan scrollbar Firefox */
+        }
+        .category-wrapper::-webkit-scrollbar {
+            display: none; /* Sembunyikan scrollbar Chrome/Safari */
+        }
+        .category-btn {
+            display: inline-block;
+            padding: 10px 24px;
+            margin-right: 12px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 14px;
+            cursor: pointer;
+            border: none;
+            outline: none;
+            transition: all 0.3s ease;
+            /* Animasi 10 detik sekali ganti warna background & teks kontras */
+            animation: kategoriWarna 110s infinite steps(1);
+        }
+        
+        /* Area Konten Dinamis di bawah Kategori */
+        .content-display {
+            padding: 30px 20px;
+            text-align: center;
+            color: #888;
+            font-size: 18px;
+            border: 2px dashed #222;
+            margin: 20px;
+            border-radius: 10px;
+        }
+
+        /* ==================== ANIMASI KEYFRAMES (>10 WARNA) ==================== */
+
+        /* 2. Animasi Bingkai Logo (Per 1 Detik Berganti) */
+        @keyframes bingkaiWarna {
+            0% { border-color: #ff0000; } 9% { border-color: #ff7f00; } 18% { border-color: #ffff00; }
+            27% { border-color: #00ff00; } 36% { border-color: #00ffff; } 45% { border-color: #0000ff; }
+            54% { border-color: #8b00ff; } 63% { border-color: #ff00ff; } 72% { border-color: #ff1493; }
+            81% { border-color: #1e90ff; } 90% { border-color: #32cd32; } 100% { border-color: #ff0000; }
+        }
+        /* 2. Animasi Huruf Per 3 Detik */
+        @keyframes hurufWarna {
+            0% { color: #ff00ff; } 9% { color: #00ffff; } 18% { color: #ffff00; }
+            27% { color: #ff1493; } 36% { color: #00ff00; } 45% { color: #1e90ff; }
+            54% { color: #ff4500; } 63% { color: #0000ff; } 72% { color: #8b00ff; }
+            81% { color: #ff0000; } 90% { color: #32cd32; } 100% { color: #ff00ff; }
+        }
+        /* 3. Animasi Bingkai Mengalir Berputar */
+        @keyframes putarMelingkar {
+            100% { transform: rotate(360deg); }
+        }
+        @keyframes putarMelingkarBalik {
+            100% { transform: rotate(-360deg); }
+        }
+        /* 4. Animasi Tombol Tambah Per 1 Detik */
+        @keyframes tombolTambahWarna {
+            0% { background-color: #ff0000; color: #fff; } 9% { background-color: #ff7f00; color: #000; }
+            18% { background-color: #ffff00; color: #000; } 27% { background-color: #00ff00; color: #000; }
+            36% { background-color: #00ffff; color: #000; } 45% { background-color: #0000ff; color: #fff; }
+            54% { background-color: #8b00ff; color: #fff; } 63% { background-color: #ff00ff; color: #fff; }
+            72% { background-color: #ff1493; color: #fff; } 81% { background-color: #1e90ff; color: #fff; }
+            90% { background-color: #32cd32; color: #000; } 100% { background-color: #ff0000; color: #fff; }
+        }
+        /* 5. Animasi Kaca Pembesar Per 5 Detik */
+        @keyframes iconWarna {
+            0% { fill: #1e90ff; } 9% { fill: #ff0055; } 18% { fill: #00ffaa; }
+            27% { fill: #ffcc00; } 36% { fill: #ff00ff; } 45% { fill: #00ffff; }
+            54% { fill: #ff5722; } 63% { fill: #4caf50; } 72% { fill: #9c27b0; }
+            81% { fill: #e91e63; } 90% { fill: #ffff00; } 100% { fill: #1e90ff; }
+        }
+        /* 6. Animasi Tombol Kategori Per 10 Detik + Kontras Tulisan Terbaca */
+        @keyframes kategoriWarna {
+            0% { background-color: #ff0000; color: #ffffff; }
+            9% { background-color: #ffffff; color: #000000; }
+            18% { background-color: #00ff00; color: #000000; }
+            27% { background-color: #0000ff; color: #ffffff; }
+            36% { background-color: #ffff00; color: #000000; }
+            45% { background-color: #ff00ff; color: #ffffff; }
+            54% { background-color: #00ffff; color: #000000; }
+            63% { background-color: #ff8c00; color: #ffffff; }
+            72% { background-color: #8b00ff; color: #ffffff; }
+            81% { background-color: #ff1493; color: #ffffff; }
+            90% { background-color: #1e90ff; color: #ffffff; }
+            100% { background-color: #ff0000; color: #ffffff; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo-box">
+            <span>H</span><span>a</span><span>h</span><span>a</span><span>H</span><span>i</span><span>h</span><span>i</span>
+        </div>
+
+        <div class="header-right">
+            <svg class="search-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z" stroke="currentColor" stroke-width="1"/>
+            </svg>
+
+            <a href="tambah.html" class="btn-tambah" id="btnTambah">+Tambahkan</a>
+
+            <div class="profile-container">
+                <div class="profile-border-inner">
+                    <img id="userAvatar" src="https://www.w3schools.com/howto/img_avatar.png" alt="Profil">
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="category-wrapper">
+        <button class="category-btn" onclick="gantiKonten('Video')">🎬 Video Embed</button>
+        <button class="category-btn" onclick="gantiKonten('Musik')">🎵 Musik Spotify</button>
+        <button class="category-btn" onclick="gantiKonten('Meme')">😂 Meme Gambar</button>
+        <button class="category-btn" onclick="gantiKonten('Games')">🎮 Mini Games</button>
+        <button class="category-btn" onclick="gantiKonten('Quotes')">✍️ Kata Bijak</button>
+        <button class="category-btn" onclick="gantiKonten('Trending')">🔥 Sedang Viral</button>
+        <button class="category-btn" onclick="gantiKonten('Anime')">🌸 Jejepangan</button>
+    </div>
+
+    <div class="content-display" id="contentDisplay">
+        Silakan pilih kategori di atas untuk memuat data embed.
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+
+        // Konfigurasi Firebase (Samakan dengan index/buku tamu)
+        const firebaseConfig = {
+          apiKey: "AIzaSyDrEQ7GcPPo8CbqF0_dRwDlXSXbz1FsmPs",
+          authDomain: "hahahihi-5084e.firebaseapp.com",
+          projectId: "hahahihi-5084e",
+          storageBucket: "hahahihi-5084e.firebasestorage.app",
+          messagingSenderId: "691544964510",
+          appId: "1:691544964510:web:561a1aed05c8a8f5ff6a8f"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+
+        // 3. Mengambil & Memasang Foto Profil Email Aktif secara Realtime
+        onAuthStateChanged(auth, (user) => {
+            if (user && user.photoURL) {
+                document.getElementById('userAvatar').src = user.photoURL;
+                console.log("Foto profil berhasil dimuat dari Google Auth!");
+            }
+        });
+    </script>
+
+    <script>
+        // 6. Logika klik kategori untuk mengubah tampilan bawahnya
+        function gantiKonten(kategori) {
+            const display = document.getElementById('contentDisplay');
+            display.innerHTML = `Membuka Konten Kategori: <strong>${kategori}</strong> <br><br> <span style="font-size:14px; color:#666;">[Disini nanti komponen embed diletakkan]</span>`;
+        }
+    </script>
+</body>
+</html>
+
