@@ -51,7 +51,6 @@
         .google-btn { background: #fff; color: #000; border: none; padding: 15px 30px; border-radius: 10px; font-size: 1rem; cursor: pointer; display: flex; align-items: center; gap: 10px; margin: 20px auto; transition: all 0.3s; }
         .google-btn:hover { transform: scale(1.05); box-shadow: 0 0 20px rgba(255, 255, 255, 0.5); }
         
-        /* Form Input Style */
         .form-group { margin-bottom: 15px; text-align: left; }
         .form-group label { display: block; color: #FFA500; font-size: 0.9rem; margin-bottom: 5px; }
         .form-input { width: 100%; padding: 12px; background: #222; border: 1px solid rgba(255, 215, 0, 0.4); border-radius: 8px; color: #fff; font-size: 1rem; outline: none; transition: 0.3s; }
@@ -127,7 +126,7 @@
         <div class="modal-content">
             <button class="close-btn" onclick="closeModal('uploadModal')">&times;</button>
             <h2>Tambah Siaran / Audio</h2>
-            <p style="color:#888;margin-bottom:20px;">Masukkan detail link audio streaming langsung</p>
+            <p style="color:#888;margin-bottom:20px;">Masukkan detail link audio dari Litterbox</p>
             
             <div class="form-group">
                 <label for="trackName">Nama Lagu / Judul Siaran</label>
@@ -135,8 +134,8 @@
             </div>
 
             <div class="form-group">
-                <label for="trackUrl">URL Direct Audio (.mp3 / URL Stream)</label>
-                <input type="url" id="trackUrl" class="form-input" placeholder="Contoh: https://server.com/audio.mp3">
+                <label for="trackUrl">URL Audio dari Litterbox (.mp3)</label>
+                <input type="url" id="trackUrl" class="form-input" placeholder="Contoh: https://litterbox.catbox.moe/files/xxxxxx.mp3">
             </div>
             
             <button class="btn" id="addBtn">Tambahkan ke Antrian</button>
@@ -193,7 +192,6 @@
             uploadModal.classList.add('active');
         };
 
-        // PROSES SIMPAN LINK KE FIRESTORE (SANGAT CEPAT & ANTI GAGAL)
         document.getElementById('addBtn').onclick = async () => {
             if (!isAdmin) return;
             
@@ -210,7 +208,6 @@
             addBtn.textContent = 'Menyimpan...';
             
             try {
-                // Hanya menyimpan teks link ke database Firestore cloud
                 await addDoc(collection(db, 'queue'), {
                     name: name, 
                     url: url, 
@@ -297,7 +294,6 @@
             try { await audioPlayer.play(); } catch (e) { console.log('Autoplay dicegah oleh browser.'); }
         }
 
-        // HAPUS DATA LINK DI FIRESTORE SAAT LAGU SELESAI PUTAR
         audioPlayer.onended = async () => {
             if (currentTrack) {
                 try {
