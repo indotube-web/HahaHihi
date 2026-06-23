@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Suara Besuki FM 102.5 - Cahaya Selatan Tulungagung</title>
-    <meta name="description" content="Suara Besuki FM 102.5 Cahaya Selatan dari Tulungagung - Radio Dakwah & Informasi Besuki">
+    <title>Suara Besuki FM 102.5 Mhz - Cahaya Selatan Tulungagung</title>
+    <meta name="description" content="Suara Besuki FM 102.5 Mhz Cahaya Selatan dari Tulungagung - Radio Dakwah & Informasi Besuki">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { background: #000; color: #fff; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; overflow-x: hidden; min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; }
@@ -50,6 +50,7 @@
         .modal-content h2 { color: #FFD700; margin-bottom: 10px; }
         .google-btn { background: #fff; color: #000; border: none; padding: 15px 30px; border-radius: 10px; font-size: 1rem; cursor: pointer; display: flex; align-items: center; gap: 10px; margin: 20px auto; transition: all 0.3s; }
         .google-btn:hover { transform: scale(1.05); box-shadow: 0 0 20px rgba(255, 255, 255, 0.5); }
+        .google-btn:disabled { background: #888; cursor: not-allowed; }
         
         .form-group { margin-bottom: 15px; text-align: left; }
         .form-group label { display: block; color: #FFA500; font-size: 0.9rem; margin-bottom: 5px; }
@@ -76,8 +77,10 @@
 <body>
     <div class="glow-bg"></div>
     
+    <!-- DEBUG ADMIN -->
     <div class="admin-debug" id="adminDebug"></div>
     
+    <!-- TOMBOL TAMBAH AUDIO (KIRI ATAS) -->
     <button class="upload-btn" id="uploadBtn" title="Tambah Audio - Admin Only">+</button>
     
     <div class="header">
@@ -87,8 +90,8 @@
         </button>
     </div>
     <div class="container">
-        <h1>SUARA BESUKI FM</h1>
-        <div class="freq">102.5</div>
+        <h1>Suara Besuki FM</h1>
+        <div class="freq">102.5 Mhz</div>
         <h2>CAHAYA SELATAN</h2>
         <h3>TULUNGAGUNG</h3>
         <div class="player-box">
@@ -99,18 +102,19 @@
         </div>
     </div>
 
+    <!-- MODAL LOGIN -->
     <div class="modal active" id="loginModal">
         <div class="modal-content">
-            <button class="close-btn" onclick="closeModal('loginModal')" style="display:none;">&times;</button>
             <h2>Selamat Datang di Suara Besuki FM 102.5</h2>
             <p style="color: #888; margin-bottom: 20px;">Silakan login untuk mendengarkan siaran</p>
             <button class="google-btn" id="loginBtn">
                 <svg width="20" height="20" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/><path fill="none" d="M0 0h48v48H0z"/></svg>
-                Login dengan Google
+                <span id="loginText">Login dengan Google</span>
             </button>
         </div>
     </div>
 
+    <!-- MODAL PROFIL -->
     <div class="modal" id="profileModal">
         <div class="modal-content">
             <button class="close-btn" onclick="closeModal('profileModal')">&times;</button>
@@ -122,6 +126,7 @@
         </div>
     </div>
 
+    <!-- MODAL INPUT LINK -->
     <div class="modal" id="uploadModal">
         <div class="modal-content">
             <button class="close-btn" onclick="closeModal('uploadModal')">&times;</button>
@@ -144,7 +149,7 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-app.js";
-        import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js";
+        import { getAuth, GoogleAuthProvider, signInWithRedirect, getRedirectResult, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js";
         import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, deleteDoc, doc, getDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
         import { getDatabase, ref as dbRef, set, onValue, onDisconnect } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-database.js";
 
@@ -166,6 +171,7 @@
         let currentUser = null;
         let isAdmin = false;
         let currentTrack = null;
+        let localQueue = []; // Menyimpan salinan antrian lokal agar transisi audio instan
         let queueUnsubscribe = null;
 
         const audioPlayer = document.getElementById('audioPlayer');
@@ -174,15 +180,30 @@
         const uploadModal = document.getElementById('uploadModal');
         const adminDebug = document.getElementById('adminDebug');
 
-        document.getElementById('loginBtn').onclick = async () => {
+        // AMAN HP: Menggunakan sistem Redirect Penuh untuk Login Google
+        document.getElementById('loginBtn').onclick = () => {
+            const loginBtn = document.getElementById('loginBtn');
+            const loginText = document.getElementById('loginText');
+            loginBtn.disabled = true;
+            loginText.textContent = 'Mengalihkan ke Google...';
+
             const provider = new GoogleAuthProvider();
-            try { await signInWithPopup(auth, provider); } 
-            catch (e) { alert('Login gagal: ' + e.message); }
+            provider.setCustomParameters({ prompt: 'select_account' }); 
+            signInWithRedirect(auth, provider);
         };
+
+        // Menangkap data setelah dialihkan kembali dari Google Login
+        getRedirectResult(auth).catch((error) => {
+            console.error("Gagal memproses pengalihan masuk:", error);
+            document.getElementById('loginBtn').disabled = false;
+            document.getElementById('loginText').textContent = 'Login dengan Google';
+        });
 
         document.getElementById('logoutBtn').onclick = () => {
             closeModal('profileModal');
-            signOut(auth);
+            signOut(auth).then(() => {
+                window.location.reload(); // Refresh setelah logout agar cache bersih total
+            });
         };
         
         document.getElementById('profileBtn').onclick = () => profileModal.classList.add('active');
@@ -215,11 +236,10 @@
                     timestamp: serverTimestamp()
                 });
                 
-                alert('Link audio berhasil masuk antrian!');
+                alert('Audio masuk antrian!');
                 closeModal('uploadModal');
             } catch (e) { 
-                alert('Gagal menyimpan data: ' + e.message); 
-                console.error(e);
+                alert('Gagal menyimpan: ' + e.message); 
             }
             
             addBtn.disabled = false;
@@ -229,6 +249,7 @@
         function closeModal(id) { document.getElementById(id).classList.remove('active'); }
         window.closeModal = closeModal;
 
+        // AUTHENTICATION STATE WATCHER
         onAuthStateChanged(auth, async (user) => {
             if (user) {
                 currentUser = user;
@@ -246,14 +267,16 @@
                 
                 if (!isAdmin) {
                     adminDebug.style.display = 'block';
-                    adminDebug.innerHTML = `UID: ${user.uid}<br>Kamu belum admin. Tambahkan UID ini ke Firestore > admins`;
+                    adminDebug.innerHTML = `UID: ${user.uid}<br>Belum admin. Daftarkan UID ini di Firestore > admins`;
                 } else {
                     adminDebug.style.display = 'none';
                 }
 
+                // 1 AKUN = 1 PENDENGAR (Realtime DB Presence)
                 const userRef = dbRef(rtdb, `listeners/${user.uid}`);
                 set(userRef, true);
                 onDisconnect(userRef).remove();
+                
                 initPlayer();
             } else {
                 currentUser = null;
@@ -267,51 +290,75 @@
             }
         });
 
+        // HITUNG TOTAL PENDENGAR SECARA REALTIME
         onValue(dbRef(rtdb, 'listeners'), (snapshot) => {
-            document.getElementById('listenerCount').textContent = snapshot.size || 0;
+            const count = snapshot.exists() ? snapshot.numChildren() : 0;
+            document.getElementById('listenerCount').textContent = count;
         });
 
+        // INITIALIZE PLAYER & QUEUE LISTENER
         function initPlayer() {
             const q = query(collection(db, 'queue'), orderBy('timestamp'));
             queueUnsubscribe = onSnapshot(q, (snapshot) => {
-                const tracks = [];
-                snapshot.forEach(doc => tracks.push({ id: doc.id, ...doc.data() }));
-                document.getElementById('queueInfo').textContent = tracks.length > 0 ? `${tracks.length} siaran dalam antrian` : 'Antrian siaran kosong';
-                if (!currentTrack && tracks.length > 0) playNext(tracks[0]);
+                localQueue = [];
+                snapshot.forEach(doc => localQueue.push({ id: doc.id, ...doc.data() }));
+                
+                document.getElementById('queueInfo').textContent = localQueue.length > 0 ? `${localQueue.length} siaran dalam antrian` : 'Antrian siaran kosong';
+                
+                // Jika sedang hening dan ada lagu baru di antrian, langsung putar
+                if (!currentTrack && localQueue.length > 0) {
+                    playNext(localQueue[0]);
+                }
             });
         }
 
+        // FUNGSI UTAMA MEMUTAR TRACK
         async function playNext(track) {
             if (!track) {
                 currentTrack = null;
                 document.getElementById('nowPlaying').textContent = 'Menunggu siaran...';
-                audioPlayer.pause();
+                audioPlayer.removeAttribute('src');
+                audioPlayer.load();
                 return;
             }
             currentTrack = track;
             document.getElementById('nowPlaying').textContent = `▶ ${track.name}`;
             audioPlayer.src = track.url;
-            try { await audioPlayer.play(); } catch (e) { console.log('Autoplay dicegah oleh browser.'); }
+            try { 
+                await audioPlayer.play(); 
+            } catch (e) { 
+                console.log('Autoplay ditahan browser. Menunggu interaksi user.'); 
+            }
         }
 
+        // FIX AUTO-PLAY SIARAN KEDUA (Transisi Instan & Sinkron)
         audioPlayer.onended = async () => {
             if (currentTrack) {
-                try {
-                    await deleteDoc(doc(db, 'queue', currentTrack.id));
-                } catch (e) { 
-                    console.error('Gagal menghapus antrian:', e); 
+                const finishedTrackId = currentTrack.id;
+                
+                // Cari lagu berikutnya di antrian lokal secara instan sebelum dihapus di cloud
+                const currentIndex = localQueue.findIndex(t => t.id === finishedTrackId);
+                const nextTrack = localQueue[currentIndex + 1];
+                
+                // Hapus lagu yang sudah selesai di database di latar belakang
+                deleteDoc(doc(db, 'queue', finishedTrackId)).catch(e => console.error(e));
+                
+                if (nextTrack) {
+                    // Langsung sambar putar lagu kedua (Wajib sejalur/seirama dengan event loop 'ended')
+                    playNext(nextTrack);
+                } else {
+                    currentTrack = null;
+                    document.getElementById('nowPlaying').textContent = 'Menunggu siaran...';
                 }
-                currentTrack = null;
             }
         };
 
-        audioPlayer.onerror = () => {
-            if (currentTrack) {
-                deleteDoc(doc(db, 'queue', currentTrack.id));
-                currentTrack = null;
-            }
+        // AMAN REFRESH: Fungsi error tidak lagi menghapus data dari Firestore
+        audioPlayer.onerror = (e) => {
+            console.log("Audio player mendeteksi interupsi/jeda jaringan.");
         };
 
+        // UTILITY KEAMANAN PENDENGAR
         document.addEventListener('visibilitychange', () => {
             if (document.hidden) audioPlayer.pause();
             else if (currentUser && currentTrack) audioPlayer.play().catch(() => {});
