@@ -6,332 +6,65 @@
     <title>Suara Besuki FM 102.5 - Cahaya Selatan Tulungagung</title>
     <meta name="description" content="Suara Besuki FM 102.5 Cahaya Selatan dari Tulungagung - Radio Dakwah & Informasi Besuki">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            background: #000;
-            color: #fff;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            overflow-x: hidden;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-        }
-
-     .glow-bg {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            width: 600px;
-            height: 600px;
-            background: radial-gradient(circle, rgba(255,215,0,0.15) 0%, rgba(255,140,0,0.05) 40%, transparent 70%);
-            transform: translate(-50%, -50%);
-            pointer-events: none;
-            animation: pulse 4s ease-in-out infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { opacity: 0.5; transform: translate(-50%, -50%) scale(1); }
-            50% { opacity: 0.8; transform: translate(-50%, -50%) scale(1.1); }
-        }
-
-     .container {
-            text-align: center;
-            z-index: 10;
-            padding: 20px;
-        }
-
-        h1 {
-            font-size: 3.5rem;
-            font-weight: 900;
-            background: linear-gradient(45deg, #FFD700, #FFA500, #FFD700);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            text-shadow: 0 0 30px rgba(255, 215, 0, 0.5);
-            margin-bottom: 5px;
-            letter-spacing: 2px;
-        }
-
-     .freq {
-            font-size: 2.5rem;
-            font-weight: 700;
-            color: #FFA500;
-            margin-bottom: 15px;
-            text-shadow: 0 0 20px rgba(255, 165, 0, 0.6);
-        }
-
-        h2 {
-            font-size: 1.8rem;
-            color: #FFA500;
-            font-weight: 300;
-            margin-bottom: 5px;
-            letter-spacing: 4px;
-        }
-
-        h3 {
-            font-size: 1.2rem;
-            color: #888;
-            font-weight: 400;
-            margin-bottom: 40px;
-        }
-
-     .player-box {
-            background: rgba(20, 20, 20, 0.8);
-            border: 2px solid rgba(255, 215, 0, 0.3);
-            border-radius: 20px;
-            padding: 30px 40px;
-            backdrop-filter: blur(10px);
-            box-shadow: 0 0 40px rgba(255, 215, 0, 0.2);
-            min-width: 350px;
-        }
-
-     .now-playing {
-            font-size: 0.9rem;
-            color: #FFA500;
-            margin-bottom: 10px;
-            min-height: 20px;
-            word-break: break-all;
-        }
-
-     .listeners {
-            font-size: 1.1rem;
-            color: #0f0;
-            margin-top: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
-
-     .listeners::before {
-            content: '●';
-            animation: blink 1s infinite;
-        }
-
-        @keyframes blink {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.3; }
-        }
-
-     .header {
-            position: fixed;
-            top: 0;
-            right: 0;
-            padding: 20px;
-            z-index: 100;
-        }
-
-     .profile-btn {
-            background: rgba(255, 215, 0, 0.1);
-            border: 1px solid rgba(255, 215, 0, 0.3);
-            color: #FFD700;
-            padding: 10px 20px;
-            border-radius: 25px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            transition: all 0.3s;
-        }
-
-     .profile-btn:hover {
-            background: rgba(255, 215, 0, 0.2);
-            box-shadow: 0 0 20px rgba(255, 215, 0, 0.4);
-        }
-
-     .profile-btn img {
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-        }
-
-     .upload-btn {
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            width: 60px;
-            height: 60px;
-            background: linear-gradient(45deg, #FFD700, #FFA500);
-            border: none;
-            border-radius: 50%;
-            font-size: 2rem;
-            color: #000;
-            cursor: pointer;
-            box-shadow: 0 0 30px rgba(255, 215, 0, 0.6);
-            transition: all 0.3s;
-            z-index: 90;
-            display: none;
-        }
-
-     .upload-btn:hover {
-            transform: scale(1.1) rotate(90deg);
-            box-shadow: 0 0 50px rgba(255, 215, 0, 0.8);
-        }
-
-     .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.9);
-            backdrop-filter: blur(10px);
-            z-index: 1000;
-            align-items: center;
-            justify-content: center;
-        }
-
-     .modal.active {
-            display: flex;
-        }
-
-     .modal-content {
-            background: #111;
-            border: 2px solid rgba(255, 215, 0, 0.3);
-            border-radius: 20px;
-            padding: 40px;
-            max-width: 500px;
-            width: 90%;
-            text-align: center;
-            box-shadow: 0 0 60px rgba(255, 215, 0, 0.3);
-            position: relative;
-        }
-
-     .modal-content h2 {
-            color: #FFD700;
-            margin-bottom: 20px;
-        }
-
-     .google-btn {
-            background: #fff;
-            color: #000;
-            border: none;
-            padding: 15px 30px;
-            border-radius: 10px;
-            font-size: 1rem;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin: 20px auto;
-            transition: all 0.3s;
-        }
-
-     .google-btn:hover {
-            transform: scale(1.05);
-            box-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
-        }
-
-     .btn {
-            background: linear-gradient(45deg, #FFD700, #FFA500);
-            color: #000;
-            border: none;
-            padding: 12px 30px;
-            border-radius: 10px;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            margin: 10px;
-            transition: all 0.3s;
-        }
-
-     .btn:hover {
-            transform: scale(1.05);
-            box-shadow: 0 0 20px rgba(255, 215, 0, 0.6);
-        }
-
-     .btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-
-     .btn-danger {
-            background: linear-gradient(45deg, #ff4444, #cc0000);
-            color: #fff;
-        }
-
-        input[type="file"] {
-            display: none;
-        }
-
-     .file-list {
-            margin: 20px 0;
-            text-align: left;
-            max-height: 200px;
-            overflow-y: auto;
-        }
-
-     .file-item {
-            background: rgba(255, 215, 0, 0.1);
-            padding: 10px;
-            margin: 5px 0;
-            border-radius: 5px;
-            font-size: 0.9rem;
-        }
-
-     .close-btn {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            background: none;
-            border: none;
-            color: #FFD700;
-            font-size: 2rem;
-            cursor: pointer;
-        }
-
-        #audioPlayer {
-            display: none;
-        }
-
-     .queue-info {
-            color: #666;
-            font-size: 0.85rem;
-            margin-top: 15px;
-        }
-
-        @media (max-width: 600px) {
-            h1 { font-size: 2.5rem; }
-         .freq { font-size: 2rem; }
-            h2 { font-size: 1.4rem; }
-         .player-box { min-width: 300px; padding: 20px; }
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background: #000; color: #fff; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; overflow-x: hidden; min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; }
+    .glow-bg { position: fixed; top: 50%; left: 50%; width: 600px; height: 600px; background: radial-gradient(circle, rgba(255,215,0,0.15) 0%, rgba(255,140,0,0.05) 40%, transparent 70%); transform: translate(-50%, -50%); pointer-events: none; animation: pulse 4s ease-in-out infinite; }
+        @keyframes pulse { 0%, 100% { opacity: 0.5; transform: translate(-50%, -50%) scale(1); } 50% { opacity: 0.8; transform: translate(-50%, -50%) scale(1.1); } }
+    .container { text-align: center; z-index: 10; padding: 20px; }
+        h1 { font-size: 3.5rem; font-weight: 900; background: linear-gradient(45deg, #FFD700, #FFA500, #FFD700); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-shadow: 0 0 30px rgba(255, 215, 0, 0.5); margin-bottom: 5px; letter-spacing: 2px; }
+    .freq { font-size: 2.5rem; font-weight: 700; color: #FFA500; margin-bottom: 15px; text-shadow: 0 0 20px rgba(255, 165, 0, 0.6); }
+        h2 { font-size: 1.8rem; color: #FFA500; font-weight: 300; margin-bottom: 5px; letter-spacing: 4px; }
+        h3 { font-size: 1.2rem; color: #888; font-weight: 400; margin-bottom: 40px; }
+    .player-box { background: rgba(20, 20, 20, 0.8); border: 2px solid rgba(255, 215, 0, 0.3); border-radius: 20px; padding: 30px 40px; backdrop-filter: blur(10px); box-shadow: 0 0 40px rgba(255, 215, 0, 0.2); min-width: 350px; }
+    .now-playing { font-size: 0.9rem; color: #FFA500; margin-bottom: 10px; min-height: 20px; word-break: break-all; }
+    .listeners { font-size: 1.1rem; color: #0f0; margin-top: 20px; display: flex; align-items: center; justify-content: center; gap: 8px; }
+    .listeners::before { content: '●'; animation: blink 1s infinite; }
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+    .header { position: fixed; top: 0; right: 0; padding: 20px; z-index: 100; }
+    .profile-btn { background: rgba(255, 215, 0, 0.1); border: 1px solid rgba(255, 215, 0, 0.3); color: #FFD700; padding: 10px 20px; border-radius: 25px; cursor: pointer; display: flex; align-items: center; gap: 10px; transition: all 0.3s; }
+    .profile-btn:hover { background: rgba(255, 215, 0, 0.2); box-shadow: 0 0 20px rgba(255, 215, 0, 0.4); }
+    .profile-btn img { width: 30px; height: 30px; border-radius: 50%; }
+    .upload-btn { position: fixed; bottom: 30px; right: 30px; width: 60px; height: 60px; background: linear-gradient(45deg, #FFD700, #FFA500); border: none; border-radius: 50%; font-size: 2rem; color: #000; cursor: pointer; box-shadow: 0 0 30px rgba(255, 215, 0, 0.6); transition: all 0.3s; z-index: 90; display: none; }
+    .upload-btn:hover { transform: scale(1.1) rotate(90deg); box-shadow: 0 0 50px rgba(255, 215, 0, 0.8); }
+    .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.9); backdrop-filter: blur(10px); z-index: 1000; align-items: center; justify-content: center; }
+    .modal.active { display: flex; }
+    .modal-content { background: #111; border: 2px solid rgba(255, 215, 0, 0.3); border-radius: 20px; padding: 40px; max-width: 500px; width: 90%; text-align: center; box-shadow: 0 0 60px rgba(255, 215, 0, 0.3); position: relative; }
+    .modal-content h2 { color: #FFD700; margin-bottom: 20px; }
+    .google-btn { background: #fff; color: #000; border: none; padding: 15px 30px; border-radius: 10px; font-size: 1rem; cursor: pointer; display: flex; align-items: center; gap: 10px; margin: 20px auto; transition: all 0.3s; }
+    .google-btn:hover { transform: scale(1.05); box-shadow: 0 0 20px rgba(255, 255, 255, 0.5); }
+    .btn { background: linear-gradient(45deg, #FFD700, #FFA500); color: #000; border: none; padding: 12px 30px; border-radius: 10px; font-size: 1rem; font-weight: 600; cursor: pointer; margin: 10px; transition: all 0.3s; }
+    .btn:hover { transform: scale(1.05); box-shadow: 0 0 20px rgba(255, 215, 0, 0.6); }
+    .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+    .btn-danger { background: linear-gradient(45deg, #ff4444, #cc0000); color: #fff; }
+        input[type="file"] { display: none; }
+    .file-list { margin: 20px 0; text-align: left; max-height: 200px; overflow-y: auto; }
+    .file-item { background: rgba(255, 215, 0, 0.1); padding: 10px; margin: 5px 0; border-radius: 5px; font-size: 0.9rem; }
+    .close-btn { position: absolute; top: 15px; right: 15px; background: none; border: none; color: #FFD700; font-size: 2rem; cursor: pointer; }
+        #audioPlayer { display: none; }
+    .queue-info { color: #666; font-size: 0.85rem; margin-top: 15px; }
+        @media (max-width: 600px) { h1 { font-size: 2.5rem; }.freq { font-size: 2rem; } h2 { font-size: 1.4rem; }.player-box { min-width: 300px; padding: 20px; } }
     </style>
 </head>
 <body>
     <div class="glow-bg"></div>
-
     <div class="header">
         <button class="profile-btn" id="profileBtn" style="display:none;">
             <img id="userAvatar" src="" alt="User">
             <span id="userName"></span>
         </button>
     </div>
-
     <div class="container">
         <h1>SUARA BESUKI FM</h1>
         <div class="freq">102.5</div>
         <h2>CAHAYA SELATAN</h2>
         <h3>TULUNGAGUNG</h3>
-
         <div class="player-box">
             <div class="now-playing" id="nowPlaying">Menunggu siaran...</div>
             <audio id="audioPlayer"></audio>
             <div class="queue-info" id="queueInfo"></div>
-            <div class="listeners">
-                <span id="listenerCount">0</span> Pendengar
-            </div>
+            <div class="listeners"><span id="listenerCount">0</span> Pendengar</div>
         </div>
     </div>
-
     <button class="upload-btn" id="uploadBtn" title="Upload Audio - Admin Only">+</button>
 
     <!-- Login Modal -->
@@ -372,14 +105,12 @@
     </div>
 
     <script type="module">
-        // Import SDKs yang dipake Suara Besuki FM
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-app.js";
         import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js";
         import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, deleteDoc, doc, getDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
         import { getStorage, ref, uploadBytes, getDownloadURL, deleteObject } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-storage.js";
         import { getDatabase, ref as dbRef, set, onValue, onDisconnect } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-database.js";
 
-        // Config kamu udah masuk sini
         const firebaseConfig = {
             apiKey: "AIzaSyDrEQ7GcPPo8CbqF0_dRwDlXSXbz1FsmPs",
             authDomain: "hahahihi-5084e.firebaseapp.com",
@@ -390,7 +121,6 @@
             appId: "1:691544964510:web:561a1aed05c8a8f5ff6a8f"
         };
 
-        // Initialize Firebase
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
@@ -408,32 +138,19 @@
         const profileModal = document.getElementById('profileModal');
         const uploadModal = document.getElementById('uploadModal');
 
-        // Login Google
         document.getElementById('loginBtn').onclick = async () => {
             const provider = new GoogleAuthProvider();
-            try {
-                await signInWithPopup(auth, provider);
-            } catch (e) {
-                alert('Login gagal: ' + e.message);
-            }
+            try { await signInWithPopup(auth, provider); } 
+            catch (e) { alert('Login gagal: ' + e.message); }
         };
 
-        // Logout
         document.getElementById('logoutBtn').onclick = () => signOut(auth);
-
-        // Profile button
-        document.getElementById('profileBtn').onclick = () => {
-            profileModal.classList.add('active');
-        };
-
-        // Upload button
+        document.getElementById('profileBtn').onclick = () => profileModal.classList.add('active');
         document.getElementById('uploadBtn').onclick = () => {
             uploadModal.classList.add('active');
             selectedFiles = [];
             renderFileList();
         };
-
-        // File select
         document.getElementById('fileInput').onchange = (e) => {
             selectedFiles = Array.from(e.target.files);
             renderFileList();
@@ -447,20 +164,15 @@
                 addBtn.style.display = 'none';
                 return;
             }
-            list.innerHTML = selectedFiles.map((f, i) =>
-                `<div class="file-item">${i+1}. ${f.name} (${(f.size/1024/1024).toFixed(2)} MB)</div>`
-            ).join('');
+            list.innerHTML = selectedFiles.map((f, i) => `<div class="file-item">${i+1}. ${f.name} (${(f.size/1024/1024).toFixed(2)} MB)</div>`).join('');
             addBtn.style.display = 'inline-block';
         }
 
-        // Add to queue
         document.getElementById('addBtn').onclick = async () => {
             if (!isAdmin || selectedFiles.length === 0) return;
-
             const addBtn = document.getElementById('addBtn');
             addBtn.disabled = true;
             addBtn.textContent = 'Uploading...';
-
             try {
                 for (const file of selectedFiles) {
                     const timestamp = Date.now();
@@ -468,34 +180,24 @@
                     const storageRef = ref(storage, `audio/${timestamp}_${safeName}`);
                     await uploadBytes(storageRef, file);
                     const url = await getDownloadURL(storageRef);
-
                     await addDoc(collection(db, 'queue'), {
-                        name: file.name,
-                        url: url,
-                        storagePath: storageRef.fullPath,
-                        uploader: currentUser.email,
-                        timestamp: serverTimestamp()
+                        name: file.name, url: url, storagePath: storageRef.fullPath,
+                        uploader: currentUser.email, timestamp: serverTimestamp()
                     });
                 }
-
+                alert(`Berhasil! ${selectedFiles.length} file ditambahkan`);
                 selectedFiles = [];
                 renderFileList();
                 closeModal('uploadModal');
-                alert(`Berhasil! ${selectedFiles.length} file ditambahkan`);
-            } catch (e) {
-                alert('Upload gagal: ' + e.message);
-            }
-
+            } catch (e) { alert('Upload gagal: ' + e.message); }
             addBtn.disabled = false;
             addBtn.textContent = 'Tambahkan ke Antrian';
         };
 
-        function closeModal(id) {
-            document.getElementById(id).classList.remove('active');
-        }
+        function closeModal(id) { document.getElementById(id).classList.remove('active'); }
         window.closeModal = closeModal;
 
-        // Auth state
+        // INI YANG UDAH DIBENERIN: PAKE user.uid BUKAN user.email
         onAuthStateChanged(auth, async (user) => {
             if (user) {
                 currentUser = user;
@@ -507,17 +209,15 @@
                 document.getElementById('profileName').textContent = user.displayName;
                 document.getElementById('profileEmail').textContent = user.email;
 
-                // Check admin - bikin collection 'admins' di Firestore, doc ID = email kamu
-                const adminDoc = await getDoc(doc(db, 'admins', user.email));
-                isAdmin = adminDoc.exists();
+                // CEK ADMIN PAKE UID - INI KUNCINYA
+                const adminDoc = await getDoc(doc(db, 'admins', user.uid));
+                isAdmin = adminDoc.exists() && adminDoc.data().role === 'admin';
                 document.getElementById('uploadBtn').style.display = isAdmin? 'block' : 'none';
+                console.log('Admin:', isAdmin, 'UID:', user.uid);
 
-                // Listener count
                 const userRef = dbRef(rtdb, `listeners/${user.uid}`);
                 set(userRef, true);
                 onDisconnect(userRef).remove();
-
-                // Start player
                 initPlayer();
             } else {
                 currentUser = null;
@@ -530,25 +230,17 @@
             }
         });
 
-        // Listener count realtime
         onValue(dbRef(rtdb, 'listeners'), (snapshot) => {
-            const count = snapshot.size || 0;
-            document.getElementById('listenerCount').textContent = count;
+            document.getElementById('listenerCount').textContent = snapshot.size || 0;
         });
 
-        // Player logic - Autoplay antrian
         function initPlayer() {
             const q = query(collection(db, 'queue'), orderBy('timestamp'));
             queueUnsubscribe = onSnapshot(q, (snapshot) => {
                 const tracks = [];
                 snapshot.forEach(doc => tracks.push({ id: doc.id,...doc.data() }));
-
-                document.getElementById('queueInfo').textContent =
-                    tracks.length > 0? `${tracks.length} lagu dalam antrian` : 'Antrian kosong';
-
-                if (!currentTrack && tracks.length > 0) {
-                    playNext(tracks[0]);
-                }
+                document.getElementById('queueInfo').textContent = tracks.length > 0? `${tracks.length} lagu dalam antrian` : 'Antrian kosong';
+                if (!currentTrack && tracks.length > 0) playNext(tracks[0]);
             });
         }
 
@@ -559,28 +251,18 @@
                 audioPlayer.pause();
                 return;
             }
-
             currentTrack = track;
             document.getElementById('nowPlaying').textContent = `▶ ${track.name}`;
             audioPlayer.src = track.url;
-
-            try {
-                await audioPlayer.play();
-            } catch (e) {
-                console.log('Autoplay prevented. User interaction needed.');
-            }
+            try { await audioPlayer.play(); } catch (e) { console.log('Autoplay prevented.'); }
         }
 
-        // Selesai putar = hapus permanen
         audioPlayer.onended = async () => {
             if (currentTrack) {
                 try {
                     await deleteObject(ref(storage, currentTrack.storagePath));
                     await deleteDoc(doc(db, 'queue', currentTrack.id));
-                    console.log('File deleted:', currentTrack.name);
-                } catch (e) {
-                    console.error('Error deleting:', e);
-                }
+                } catch (e) { console.error('Error deleting:', e); }
                 currentTrack = null;
             }
         };
@@ -592,23 +274,12 @@
             }
         };
 
-        // Autoplay saat buka, stop saat tutup/pindah tab
         document.addEventListener('visibilitychange', () => {
-            if (document.hidden) {
-                audioPlayer.pause();
-            } else if (currentUser && currentTrack) {
-                audioPlayer.play().catch(() => {});
-            }
+            if (document.hidden) audioPlayer.pause();
+            else if (currentUser && currentTrack) audioPlayer.play().catch(() => {});
         });
-
-        window.addEventListener('beforeunload', () => {
-            audioPlayer.pause();
-        });
-
-        // Prevent right click untuk user biasa
-        document.addEventListener('contextmenu', (e) => {
-            if (!isAdmin) e.preventDefault();
-        });
+        window.addEventListener('beforeunload', () => audioPlayer.pause());
+        document.addEventListener('contextmenu', (e) => { if (!isAdmin) e.preventDefault(); });
     </script>
 </body>
-  </html>
+    </html>
