@@ -77,10 +77,8 @@
 <body>
     <div class="glow-bg"></div>
     
-    <!-- DEBUG ADMIN -->
     <div class="admin-debug" id="adminDebug"></div>
     
-    <!-- TOMBOL TAMBAH AUDIO (KIRI ATAS) -->
     <button class="upload-btn" id="uploadBtn" title="Tambah Audio - Admin Only">+</button>
     
     <div class="header">
@@ -102,9 +100,9 @@
         </div>
     </div>
 
-    <!-- MODAL LOGIN -->
     <div class="modal active" id="loginModal">
         <div class="modal-content">
+            <button class="close-btn" onclick="closeModal('loginModal')" style="display:none;">&times;</button>
             <h2>Selamat Datang di Suara Besuki FM 102.5</h2>
             <p style="color: #888; margin-bottom: 20px;">Silakan login untuk mendengarkan siaran</p>
             <button class="google-btn" id="loginBtn">
@@ -114,7 +112,6 @@
         </div>
     </div>
 
-    <!-- MODAL PROFIL -->
     <div class="modal" id="profileModal">
         <div class="modal-content">
             <button class="close-btn" onclick="closeModal('profileModal')">&times;</button>
@@ -126,12 +123,11 @@
         </div>
     </div>
 
-    <!-- MODAL INPUT LINK -->
     <div class="modal" id="uploadModal">
         <div class="modal-content">
             <button class="close-btn" onclick="closeModal('uploadModal')">&times;</button>
             <h2>Tambah Siaran / Audio</h2>
-            <p style="color:#888;margin-bottom:20px;">Masukkan detail link audio dari Litterbox</p>
+            <p style="color:#888;margin-bottom:20px;">Masukkan detail link audio streaming langsung</p>
             
             <div class="form-group">
                 <label for="trackName">Nama Lagu / Judul Siaran</label>
@@ -139,8 +135,8 @@
             </div>
 
             <div class="form-group">
-                <label for="trackUrl">URL Audio dari Litterbox (.mp3)</label>
-                <input type="url" id="trackUrl" class="form-input" placeholder="Contoh: https://litterbox.catbox.moe/files/xxxxxx.mp3">
+                <label for="trackUrl">URL Direct Audio (.mp3 / URL Stream)</label>
+                <input type="url" id="trackUrl" class="form-input" placeholder="Contoh: https://server.com/audio.mp3">
             </div>
             
             <button class="btn" id="addBtn">Tambahkan ke Antrian</button>
@@ -148,10 +144,10 @@
     </div>
 
     <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-app.js";
-        import { getAuth, GoogleAuthProvider, signInWithRedirect, getRedirectResult, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js";
-        import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, deleteDoc, doc, getDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
-        import { getDatabase, ref as dbRef, set, onValue, onDisconnect } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-database.js";
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+        import { getAuth, GoogleAuthProvider, signInWithRedirect, getRedirectResult, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+        import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, deleteDoc, doc, getDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+        import { getDatabase, ref as dbRef, set, onValue, onDisconnect } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyDrEQ7GcPPo8CbqF0_dRwDlXSXbz1FsmPs",
@@ -171,7 +167,7 @@
         let currentUser = null;
         let isAdmin = false;
         let currentTrack = null;
-        let localQueue = []; // Menyimpan salinan antrian lokal agar transisi audio instan
+        let localQueue = []; // Diperlukan agar audio kedua bisa langsung mutar (autoplay)
         let queueUnsubscribe = null;
 
         const audioPlayer = document.getElementById('audioPlayer');
@@ -180,7 +176,7 @@
         const uploadModal = document.getElementById('uploadModal');
         const adminDebug = document.getElementById('adminDebug');
 
-        // AMAN HP: Menggunakan sistem Redirect Penuh untuk Login Google
+        // SISTEM LOGIN DIUBAH KE REDIRECT (ANTI ERROR DI HP)
         document.getElementById('loginBtn').onclick = () => {
             const loginBtn = document.getElementById('loginBtn');
             const loginText = document.getElementById('loginText');
@@ -192,17 +188,18 @@
             signInWithRedirect(auth, provider);
         };
 
-        // Menangkap data setelah dialihkan kembali dari Google Login
+        // Menangkap data login dari halaman Google
         getRedirectResult(auth).catch((error) => {
             console.error("Gagal memproses pengalihan masuk:", error);
             document.getElementById('loginBtn').disabled = false;
             document.getElementById('loginText').textContent = 'Login dengan Google';
         });
 
+        // REFRESH SETELAH LOGOUT AGAR SESI BERSIH TOTAL
         document.getElementById('logoutBtn').onclick = () => {
             closeModal('profileModal');
             signOut(auth).then(() => {
-                window.location.reload(); // Refresh setelah logout agar cache bersih total
+                window.location.reload(); 
             });
         };
         
@@ -236,10 +233,11 @@
                     timestamp: serverTimestamp()
                 });
                 
-                alert('Audio masuk antrian!');
+                alert('Link audio berhasil masuk antrian!');
                 closeModal('uploadModal');
             } catch (e) { 
-                alert('Gagal menyimpan: ' + e.message); 
+                alert('Gagal menyimpan data: ' + e.message); 
+                console.error(e);
             }
             
             addBtn.disabled = false;
@@ -249,7 +247,6 @@
         function closeModal(id) { document.getElementById(id).classList.remove('active'); }
         window.closeModal = closeModal;
 
-        // AUTHENTICATION STATE WATCHER
         onAuthStateChanged(auth, async (user) => {
             if (user) {
                 currentUser = user;
@@ -267,16 +264,14 @@
                 
                 if (!isAdmin) {
                     adminDebug.style.display = 'block';
-                    adminDebug.innerHTML = `UID: ${user.uid}<br>Belum admin. Daftarkan UID ini di Firestore > admins`;
+                    adminDebug.innerHTML = `UID: ${user.uid}<br>Kamu belum admin. Tambahkan UID ini ke Firestore > admins`;
                 } else {
                     adminDebug.style.display = 'none';
                 }
 
-                // 1 AKUN = 1 PENDENGAR (Realtime DB Presence)
                 const userRef = dbRef(rtdb, `listeners/${user.uid}`);
                 set(userRef, true);
                 onDisconnect(userRef).remove();
-                
                 initPlayer();
             } else {
                 currentUser = null;
@@ -290,13 +285,12 @@
             }
         });
 
-        // HITUNG TOTAL PENDENGAR SECARA REALTIME
+        // PERBAIKAN: Hitung pendengar menggunakan numChildren()
         onValue(dbRef(rtdb, 'listeners'), (snapshot) => {
             const count = snapshot.exists() ? snapshot.numChildren() : 0;
             document.getElementById('listenerCount').textContent = count;
         });
 
-        // INITIALIZE PLAYER & QUEUE LISTENER
         function initPlayer() {
             const q = query(collection(db, 'queue'), orderBy('timestamp'));
             queueUnsubscribe = onSnapshot(q, (snapshot) => {
@@ -305,14 +299,12 @@
                 
                 document.getElementById('queueInfo').textContent = localQueue.length > 0 ? `${localQueue.length} siaran dalam antrian` : 'Antrian siaran kosong';
                 
-                // Jika sedang hening dan ada lagu baru di antrian, langsung putar
                 if (!currentTrack && localQueue.length > 0) {
                     playNext(localQueue[0]);
                 }
             });
         }
 
-        // FUNGSI UTAMA MEMUTAR TRACK
         async function playNext(track) {
             if (!track) {
                 currentTrack = null;
@@ -327,24 +319,20 @@
             try { 
                 await audioPlayer.play(); 
             } catch (e) { 
-                console.log('Autoplay ditahan browser. Menunggu interaksi user.'); 
+                console.log('Autoplay ditahan browser.'); 
             }
         }
 
-        // FIX AUTO-PLAY SIARAN KEDUA (Transisi Instan & Sinkron)
+        // PERBAIKAN: Agar audio kedua jalan otomatis tanpa nunggu delay
         audioPlayer.onended = async () => {
             if (currentTrack) {
                 const finishedTrackId = currentTrack.id;
-                
-                // Cari lagu berikutnya di antrian lokal secara instan sebelum dihapus di cloud
                 const currentIndex = localQueue.findIndex(t => t.id === finishedTrackId);
                 const nextTrack = localQueue[currentIndex + 1];
                 
-                // Hapus lagu yang sudah selesai di database di latar belakang
                 deleteDoc(doc(db, 'queue', finishedTrackId)).catch(e => console.error(e));
                 
                 if (nextTrack) {
-                    // Langsung sambar putar lagu kedua (Wajib sejalur/seirama dengan event loop 'ended')
                     playNext(nextTrack);
                 } else {
                     currentTrack = null;
@@ -353,12 +341,11 @@
             }
         };
 
-        // AMAN REFRESH: Fungsi error tidak lagi menghapus data dari Firestore
+        // PERBAIKAN: Menghapus logika penghapusan file di Firestore jika terjadi error internet
         audioPlayer.onerror = (e) => {
-            console.log("Audio player mendeteksi interupsi/jeda jaringan.");
+            console.log("Audio player mendeteksi interupsi jaringan.");
         };
 
-        // UTILITY KEAMANAN PENDENGAR
         document.addEventListener('visibilitychange', () => {
             if (document.hidden) audioPlayer.pause();
             else if (currentUser && currentTrack) audioPlayer.play().catch(() => {});
